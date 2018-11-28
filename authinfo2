@@ -1,0 +1,4 @@
+[nextcloud]
+backend-login: $OS_PROJECT:$OS_USER
+backend-password: $OS_PASSWORD
+storage-url: swiftks://$OS_URL:$OS_CONTAINER
