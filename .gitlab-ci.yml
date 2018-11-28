@@ -25,7 +25,7 @@ publish:
   stage: publish
   script:
     - docker pull $IMAGE_TAG
-    - docker tag $TAG $CI_REGISTRY_IMAGE:latest
+    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:latest
   only:
     - master
