@@ -5,15 +5,28 @@ services:
 
 stages:
 - build
+- publish
 
 variables:
-  TAG: registry.gitlab.com/salokyn/docker-s3ql:$CI_COMMIT_REF_NAME
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
 
 before_script:
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
 
 build:
   stage: build
   script:
-    - docker build -t $TAG .
-    - docker push $TAG
+    - docker build --pull -t $IMAGE_TAG .
+    - docker push $IMAGE_TAG
+
+publish:
+  stage: publish
+  script:
+    - docker pull $IMAGE_TAG
+    - docker tag $TAG $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+  only:
+    - master
+  
