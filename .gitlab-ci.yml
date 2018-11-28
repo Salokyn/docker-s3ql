@@ -7,7 +7,7 @@ variables:
   TAG: registry.gitlab.com/salokyn/docker-s3ql-$CI_COMMIT_REF_NAME
 
 before_script:
-  - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD registry.gitlab.com
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
 
 build:
   stage: build
