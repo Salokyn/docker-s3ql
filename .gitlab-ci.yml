@@ -14,6 +14,7 @@ variables:
 
 before_script:
   - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+  - docker login -u salokyn -p $DOCKER_PASSWORD
 
 build:
   stage: build
@@ -27,7 +28,9 @@ publish:
   script:
     - docker pull $IMAGE_TAG
     - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
+    - docker tag $IMAGE_TAG salokyn/docker-s3ql:latest
     - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push salokyn/docker-s3ql:latest
   only:
     - master
   
