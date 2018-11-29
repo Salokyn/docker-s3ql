@@ -1,23 +1,36 @@
-image: docker:latest
-
-services:
-  - docker:dind
-
 stages:
-- build
-- publish
+  - check_sh
+  - shellcheck
+  - build
+  - publish
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
 
-before_script:
-  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-  - docker login -u salokyn -p $DOCKER_PASSWORD
+check_sh:
+  image: alpine
+  stage: check_sh
+  script:
+    - "find . -name '*.sh' -type f -print0 | xargs -n 1 -t -0 sh -n"
+
+shellcheck:
+  image: debian:stable-slim
+  stage: shellcheck
+  before_script:
+    - "apt-get update -qq && apt-get install -y shellcheck"
+  script:
+    - "find . -name '*.sh' -type f -print0 | LC_ALL=C.UTF-8 xargs -n 1 -t -0 shellcheck"
+  allow_failure: true
 
 build:
   stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
   script:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest --pull -t $IMAGE_TAG .
@@ -25,6 +38,12 @@ build:
 
 publish:
   stage: publish
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker login -u salokyn -p $DOCKER_PASSWORD
   script:
     - docker pull $IMAGE_TAG
     - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
