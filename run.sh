@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/bash
+
+MOUNTPOINT=/s3ql
 
 if [ -n "$OS_PROJECT" ]
 then
@@ -13,4 +15,12 @@ else
   exit 1
 fi
 
-mount.s3ql --fg --log none --backend-options tcp-timeout=30 "$URL" /s3ql
+# Create mountpoint if not exists
+[ ! -d "$MOUNTPOINT" ] && makdir -p "$MOUNTPOINT"
+
+if [ -n "$FS_PASSWORD" ]
+then
+  mount.s3ql --fg --log none --backend-options tcp-timeout=30 "$URL" "$MOUNTPOINT" <<< "$FS_PASSWORD"
+else
+  mount.s3ql --fg --log none --backend-options tcp-timeout=30 "$URL" "$MOUNTPOINT"
+fi
