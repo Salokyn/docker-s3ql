@@ -5,9 +5,18 @@ http://www.rath.org/s3ql-docs/about.html
 
 This project aims to install S3QL in a Docker container and use it in a stack to store data on the cloud through volumes.
 
-For now, this very project only works with Openstak Swift containers.
+For now, this very project has only been written Openstak Swift containers (it may work for other anyway).
 
-The image can be used directly from the project's registry : 
+## Requirements
+Host have fuse installed
+### Debian
+```shell
+apt-get install fuse
+```
+
+## Usage
+
+The image can be used directly from the project's registry: 
 
 ```shell
 docker pull registry.gitlab.com/salokyn/docker-s3ql:master
@@ -17,6 +26,8 @@ docker run -d -e OS_USER=myLogin \
               -e OS_URL=openstack.backend/api \
               -e OS_CONTAINER=myContianer \
               -v /s3ql:/s3ql \
+              --cap-add SYS_ADMIN \
+              --device /dev/fuse \
               registry.gitlab.com/salokyn/docker-s3ql:master
 ```
 
@@ -39,6 +50,10 @@ services:
       - OS_PROJECT=myTenant
       - OS_CONTAINER=myContianer
       - OS_URL=openstack.backend/api
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - /dev/fuse
   
   app:
     ...
