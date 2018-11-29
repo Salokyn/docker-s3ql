@@ -5,7 +5,11 @@ http://www.rath.org/s3ql-docs/about.html
 
 This project aims to install S3QL in a Docker container and use it in a stack to store data on the cloud through volumes.
 
-For now, this very project has only been written Openstak Swift containers (it may work for other anyway).
+## Warning
+
+This project is **experimental** and is **not even fully tested**. To use only for tests purpose.
+
+For now, this very project has only been written for Openstak Swift containers (it may work for other anyway).
 
 ## Requirements
 Host have fuse installed
