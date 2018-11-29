@@ -19,16 +19,16 @@ apt-get install fuse
 The image can be used directly from the project's registry: 
 
 ```shell
-docker pull registry.gitlab.com/salokyn/docker-s3ql:master
-docker run -d -e OS_USER=myLogin \
-              -e OS_PASSWORD=myPassword \
-              -e OS_PROJECT=myTenant \
-              -e OS_URL=openstack.backend/api \
-              -e OS_CONTAINER=myContianer \
+docker pull registry.gitlab.com/salokyn/docker-s3ql:latest
+docker run -d -e S3QL_USERNAME=myLogin \
+              -e S3QL_PASSWORD=myPassword \
+              -e S3QL_PROJECT=myTenant \
+              -e S3QL_URL=openstack.backend/REGION:CONTAINER \
+              -e FS_PASSPHRASE=mySecretPassphrase \
               -v /s3ql:/s3ql \
               --cap-add SYS_ADMIN \
               --device /dev/fuse \
-              registry.gitlab.com/salokyn/docker-s3ql:master
+              registry.gitlab.com/salokyn/docker-s3ql:latest
 ```
 
 The best way to use it is in a `docker-compose.yml` file :
@@ -45,11 +45,11 @@ services:
     volumes:
       - s3ql:/s3ql
     environment:
-      - OS_PASSWORD=myPassword
-      - OS_USER=myLogin
-      - OS_PROJECT=myTenant
-      - OS_CONTAINER=myContianer
-      - OS_URL=openstack.backend/api
+      - S3QL_PASSWORD=myPassword
+      - S3QL_USERNAME=myLogin
+      - S3QL_PROJECT=myTenant
+      - S3QL_URL=swiftks://openstack.backend/REGION:CONTAINER
+      - FS_PASSPHRASE=mySecretPassphrase
     cap_add:
       - SYS_ADMIN
     devices:

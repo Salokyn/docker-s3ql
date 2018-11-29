@@ -1,4 +1,0 @@
-[$CONTAINER]
-backend-login: $PROJECT:$USER
-backend-password: $PASSWORD
-storage-url: $URL
