@@ -38,7 +38,7 @@ services:
       - OS_USER=myLogin
       - OS_PROJECT=myTenant
       - OS_CONTAINER=myContianer
-      - OS_URL=openstack.backend\/api
+      - OS_URL=openstack.backend/api
   
   app:
     ...
