@@ -14,7 +14,7 @@ docker pull registry.gitlab.com/salokyn/docker-s3ql:master
 docker run -d -e OS_USER=myLogin \
               -e OS_PASSWORD=myPassword \
               -e OS_PROJECT=myTenant \
-              -e OS_URL=openstack.backend\/api \
+              -e OS_URL=openstack.backend/api \
               -e OS_CONTAINER=myContianer \
               -v /s3ql:/s3ql \
               registry.gitlab.com/salokyn/docker-s3ql:master
