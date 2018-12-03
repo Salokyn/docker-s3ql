@@ -38,5 +38,6 @@ fi
 
 if [ -f "$AUTHFILE" ]
 then
+  fsck.s3ql --log none --backend-options tcp-timeout=30 "$S3QL_URL" && \
   mount.s3ql --fg --log none --backend-options tcp-timeout=30 "$S3QL_URL" "$MOUNTPOINT"
 fi
