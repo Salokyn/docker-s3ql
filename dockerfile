@@ -12,6 +12,7 @@ FROM python:3-slim
 RUN apt-get update -qq && apt-get install -y libfuse2 psmisc procps
 COPY --from=build /usr/local/bin/ /usr/local/bin/
 COPY --from=build /usr/local/lib/ /usr/local/lib/
-COPY ./run.sh /usr/local/bin/
-RUN chmod 744 /usr/local/bin/run.sh
-CMD ["/bin/sh","-c","/usr/local/bin/run.sh"]
+COPY ./authfile.sh ./entrypoint.sh ./mount.sh /usr/local/bin/
+RUN chmod 755 /usr/local/bin/*.sh
+ENTRYPOINT ["/bin/sh","/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/sh","/usr/local/bin/mount.sh"]

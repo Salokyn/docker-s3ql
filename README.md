@@ -27,7 +27,7 @@ docker pull registry.gitlab.com/salokyn/docker-s3ql:latest
 docker run -d -e S3QL_USERNAME=myLogin \
               -e S3QL_PASSWORD=myPassword \
               -e S3QL_PROJECT=myTenant \
-              -e S3QL_URL=openstack.backend/REGION:CONTAINER \
+              -e S3QL_URL=swiftks://openstack.backend/REGION:CONTAINER \
               -e FS_PASSPHRASE=mySecretPassphrase \
               -v /s3ql:/s3ql \
               --cap-add SYS_ADMIN \
