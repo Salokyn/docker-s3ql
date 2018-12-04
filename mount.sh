@@ -20,7 +20,10 @@ error() {
 }
 
 # Create mountpoint if not exists
-[ ! -d "$MOUNTPOINT" ] && mkdir -p "$MOUNTPOINT"
+if [ ! -d "$MOUNTPOINT" ] 
+then
+  mkdir -p "$MOUNTPOINT" || error
+fi
 
 # Mount FS
 if [ -f "$AUTHFILE" ]
@@ -30,4 +33,7 @@ then
   mount.s3ql --fg --backend-options tcp-timeout=30 "$S3QL_URL" "$MOUNTPOINT" & \
   PID=$!
   wait $PID
+else
+  echo "Authfile not found"  >&2
+  error
 fi
