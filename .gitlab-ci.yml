@@ -13,7 +13,7 @@ check_sh:
   image: debian:stable-slim
   stage: check_sh
   script:
-    - "find . -name '*.sh' -type f -print0 | xargs -n 1 -t -0 bash -n"
+    - "find . -name '*.sh' -type f -print0 | xargs -n 1 -t -0 sh -n"
 
 shellcheck:
   image: debian:stable-slim
