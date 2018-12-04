@@ -1,6 +1,5 @@
 #!/bin/sh
 
-MOUNTPOINT=/s3ql
 S3QL_HOME=/root/.s3ql
 AUTHFILE="$S3QL_HOME/authinfo2"
 PID=0
