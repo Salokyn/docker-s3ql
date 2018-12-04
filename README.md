@@ -14,7 +14,7 @@ This project is **experimental** and is **not even fully tested**. To use only f
 For now, this very project has only been written for Openstak Swift containers (it may work for other anyway).
 
 ## Requirements
-Host have fuse installed
+`fuse` must be installed on the host.
 ### Debian
 ```shell
 apt-get install fuse
@@ -66,4 +66,17 @@ services:
     volumes:
       - s3ql:/s3ql
     ...
+```
+
+## Create a S3QL FS
+```shell
+docker pull registry.gitlab.com/salokyn/docker-s3ql:latest
+docker run -ti -e S3QL_USERNAME=myLogin \
+               -e S3QL_PASSWORD=myPassword \
+               -e S3QL_PROJECT=myTenant \
+               -e S3QL_URL=swiftks://openstack.backend/REGION:CONTAINER \
+               --cap-add SYS_ADMIN \
+               --device /dev/fuse \
+               registry.gitlab.com/salokyn/docker-s3ql:latest \
+               mkfs.s3ql swiftks://openstack.backend/REGION:CONTAINER
 ```
