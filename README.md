@@ -75,8 +75,6 @@ docker run -ti -e S3QL_USERNAME=myLogin \
                -e S3QL_PASSWORD=myPassword \
                -e S3QL_PROJECT=myTenant \
                -e S3QL_URL=swiftks://openstack.backend/REGION:CONTAINER \
-               --cap-add SYS_ADMIN \
-               --device /dev/fuse \
                registry.gitlab.com/salokyn/docker-s3ql:latest \
                mkfs.s3ql swiftks://openstack.backend/REGION:CONTAINER
 ```
