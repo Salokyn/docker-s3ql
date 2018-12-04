@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.com/Salokyn/docker-s3ql/badges/master/pipeline.svg)](https://gitlab.com/Salokyn/docker-s3ql/commits/master)
+
 # S3QL
 
 S3QL is a file system that stores all its data online using storage services like Google Storage, Amazon S3, or OpenStack. S3QL effectively provides a hard disk of dynamic, infinite capacity that can be accessed from any computer with internet access.
