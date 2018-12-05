@@ -4,18 +4,18 @@ S3QL_HOME=/root/.s3ql
 AUTHFILE="$S3QL_HOME/authinfo2"
 
 error() {
-  echo 'An error occured. Exiting.' >&2
+  echo "An error occured. Exiting $0." >&2
   exit 1
 }
 
 # Create Authfile
 if [ ! -f "$AUTHFILE" ]
 then
-  echo "Creating $AUTHFILE..."
+  echo "Creating $AUTHFILE..." >&2
   
   if [ -z "$S3QL_PROJECT" ] || [ -z "$S3QL_USERNAME" ] || [ -z "$S3QL_PASSWORD" ] || [ -z "$S3QL_URL" ]
   then
-    echo 'Missing $S3QL_* environment variables.' >&2
+    echo "Missing \$S3QL_* environment variables." >&2
     error
   fi
 

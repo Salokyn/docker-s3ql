@@ -7,7 +7,7 @@ PID=0
 term() {
   if [ "$PID" -ne 0 ]
   then
-    echo "Shutting down..."
+    echo "Shutting down..." >&2
     kill "$PID"
     wait "$PID"
     exit $?
@@ -15,7 +15,7 @@ term() {
 }
 
 error() {
-  echo "An error occured. Exiting." >&2
+  echo "An error occured. Exiting $0." >&2
   exit 1
 }
 
