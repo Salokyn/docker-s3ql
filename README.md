@@ -22,7 +22,7 @@ apt-get install fuse
 
 ## Usage
 
-The image can be used directly from the project's registry: 
+The image can be used from the project's registry: 
 
 ```shell
 docker pull registry.gitlab.com/salokyn/docker-s3ql:latest
@@ -31,7 +31,7 @@ docker run -d -e S3QL_USERNAME=myLogin \
               -e S3QL_PROJECT=myTenant \
               -e S3QL_URL=swiftks://openstack.backend/REGION:CONTAINER \
               -e FS_PASSPHRASE=mySecretPassphrase \
-              -v /s3ql:/s3ql \
+              -v /s3ql:/s3ql:rw,rshared \
               --cap-add SYS_ADMIN \
               --device /dev/fuse \
               registry.gitlab.com/salokyn/docker-s3ql:latest
@@ -49,7 +49,7 @@ services:
   s3ql:
     image: registry.gitlab.com/salokyn/docker-s3ql
     volumes:
-      - s3ql:/s3ql
+      - s3ql:/s3ql:rw,rshared
     environment:
       - S3QL_PASSWORD=myPassword
       - S3QL_USERNAME=myLogin
@@ -67,6 +67,8 @@ services:
       - s3ql:/s3ql
     ...
 ```
+
+Take care to use *rshared* [bind-propagation](https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation) to share S3QL mount with the host or another container.
 
 ## Create a S3QL FS
 ```shell
