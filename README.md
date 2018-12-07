@@ -34,6 +34,7 @@ docker run -d -e S3QL_USERNAME=myLogin \
               -v /s3ql:/s3ql:rw,rshared \
               --cap-add SYS_ADMIN \
               --device /dev/fuse \
+              --stop-timeout 10m
               registry.gitlab.com/salokyn/docker-s3ql:latest
 ```
 
@@ -60,6 +61,7 @@ services:
       - SYS_ADMIN
     devices:
       - /dev/fuse
+    stop_grace_period: 10m
   
   app:
     ...
@@ -69,6 +71,7 @@ services:
 ```
 
 Take care to use *rshared* [bind-propagation](https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation) to share S3QL mount with the host or another container.
+You should specify a *stop-timout* greater than default 10s since unmounting S3QL may be long.
 
 ## Create a S3QL FS
 ```shell
