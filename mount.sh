@@ -28,7 +28,7 @@ fi
 # Mount FS
 if [ -f "$AUTHFILE" ]
 then
-  fsck.s3ql "$S3QL_URL" || error
+  fsck.s3ql --batch "$S3QL_URL" || error
   
   trap 'term' TERM INT HUP
 
