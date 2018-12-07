@@ -20,6 +20,18 @@ For now, this very project has only been written for Openstak Swift containers (
 apt-get install fuse
 ```
 
+## Environment variables
+
+`S3QL_USERNAME` and `S3QL_PASSWORD`: Cloud service credentials.
+
+`S3QL_PROJECT`: Cloud project or tenant.
+
+`S3QL_URL`: Depends on the backend. See http://www.rath.org/s3ql-docs/backends.html.
+
+`FS_PASSPHRASE`: S3QL FS may be encrypted. This is the passphrase to unlock the AES 256 encryption key.
+
+`S3QL_OPTIONS`: Any option to be added to the `mount.s3ql` command.
+
 ## Usage
 
 The image can be used from the project's registry: 
