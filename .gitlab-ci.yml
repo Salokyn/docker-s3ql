@@ -49,9 +49,6 @@ test:
                  -e S3QL_PROJECT=$S3QL_PROJECT
                  -e S3QL_URL=$S3QL_URL
                  -e FS_PASSPHRASE=$FS_PASSPHRASE
-                 -v /s3ql:/s3ql
-                 --cap-add SYS_ADMIN
-                 --device /dev/fuse
                  $IMAGE_TAG
                  fsck.s3ql --batch $S3QL_URL
 
