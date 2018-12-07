@@ -34,9 +34,9 @@ then
 
   if [ -n "$S3QL_OPTIONS" ]
   then
-    mount.s3ql "$S3QL_OPTIONS" --fg --backend-options tcp-timeout=30 "$S3QL_URL" "$MOUNTPOINT" & PID=$!
+    mount.s3ql "$S3QL_OPTIONS" --fg "$S3QL_URL" "$MOUNTPOINT" & PID=$!
   else
-    mount.s3ql --fg --backend-options tcp-timeout=30 "$S3QL_URL" "$MOUNTPOINT" & PID=$!
+    mount.s3ql --fg "$S3QL_URL" "$MOUNTPOINT" & PID=$!
   fi
 
   wait $PID
