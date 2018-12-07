@@ -29,9 +29,16 @@ fi
 if [ -f "$AUTHFILE" ]
 then
   fsck.s3ql --backend-options tcp-timeout=30 "$S3QL_URL" || error
+  
   trap 'term' TERM INT HUP
-  mount.s3ql $S3QL_OPTIONS --fg --backend-options tcp-timeout=30 "$S3QL_URL" "$MOUNTPOINT" & \
-  PID=$!
+
+  if [ -n "$S3QL_OPTIONS" ]
+  then
+    mount.s3ql "$S3QL_OPTIONS" --fg --backend-options tcp-timeout=30 "$S3QL_URL" "$MOUNTPOINT" & PID=$!
+  else
+    mount.s3ql --fg --backend-options tcp-timeout=30 "$S3QL_URL" "$MOUNTPOINT" & PID=$!
+  fi
+
   wait $PID
 else
   echo "Authfile not found"  >&2
