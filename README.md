@@ -14,7 +14,7 @@ This project is **experimental** and is **not even fully tested**. To use only f
 For now, this very project has only been written for Openstak Swift containers (it may work for other anyway).
 
 ## Requirements
-Host have fuse installed
+`fuse` must be installed on the host.
 ### Debian
 ```shell
 apt-get install fuse
@@ -22,7 +22,7 @@ apt-get install fuse
 
 ## Usage
 
-The image can be used directly from the project's registry: 
+The image can be used from the project's registry: 
 
 ```shell
 docker pull registry.gitlab.com/salokyn/docker-s3ql:latest
@@ -31,9 +31,10 @@ docker run -d -e S3QL_USERNAME=myLogin \
               -e S3QL_PROJECT=myTenant \
               -e S3QL_URL=swiftks://openstack.backend/REGION:CONTAINER \
               -e FS_PASSPHRASE=mySecretPassphrase \
-              -v /s3ql:/s3ql \
+              -v /s3ql:/s3ql:rw,rshared \
               --cap-add SYS_ADMIN \
               --device /dev/fuse \
+              --stop-timeout 10m
               registry.gitlab.com/salokyn/docker-s3ql:latest
 ```
 
@@ -49,7 +50,7 @@ services:
   s3ql:
     image: registry.gitlab.com/salokyn/docker-s3ql
     volumes:
-      - s3ql:/s3ql
+      - s3ql:/s3ql:rw,rshared
     environment:
       - S3QL_PASSWORD=myPassword
       - S3QL_USERNAME=myLogin
@@ -60,10 +61,25 @@ services:
       - SYS_ADMIN
     devices:
       - /dev/fuse
+    stop_grace_period: 10m
   
   app:
     ...
     volumes:
       - s3ql:/s3ql
     ...
+```
+
+Take care to use *rshared* [bind-propagation](https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation) to share S3QL mount with the host or another container.
+You should specify a *stop-timout* greater than default 10s since unmounting S3QL may be long.
+
+## Create a S3QL FS
+```shell
+docker pull registry.gitlab.com/salokyn/docker-s3ql:latest
+docker run -ti -e S3QL_USERNAME=myLogin \
+               -e S3QL_PASSWORD=myPassword \
+               -e S3QL_PROJECT=myTenant \
+               -e S3QL_URL=swiftks://openstack.backend/REGION:CONTAINER \
+               registry.gitlab.com/salokyn/docker-s3ql:latest \
+               mkfs.s3ql swiftks://openstack.backend/REGION:CONTAINER
 ```
