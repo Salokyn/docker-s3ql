@@ -45,10 +45,10 @@ test:
     - docker run -e S3QL_USERNAME=$S3QL_USERNAME
                  -e S3QL_PASSWORD=$S3QL_PASSWORD
                  -e S3QL_PROJECT=$S3QL_PROJECT
-                 -e S3QL_URL=$S3QL_URL
+                 -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
                  -e FS_PASSPHRASE=$FS_PASSPHRASE
                  $IMAGE_TAG
-                 fsck.s3ql --batch $S3QL_URL
+                 fsck.s3ql --batch swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
 
 publish:
   stage: publish
