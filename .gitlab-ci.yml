@@ -2,6 +2,7 @@ stages:
   - check_sh
   - shellcheck
   - build
+  - test
   - publish
 
 variables:
@@ -33,6 +34,21 @@ build:
     - docker pull $CI_REGISTRY_IMAGE:latest || true
     - docker build --cache-from $CI_REGISTRY_IMAGE:latest --pull -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
+
+test:
+  stage: test
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docker pull $IMAGE_TAG
+    - docker run -e S3QL_USERNAME=$S3QL_USERNAME
+                 -e S3QL_PASSWORD=$S3QL_PASSWORD
+                 -e S3QL_PROJECT=$S3QL_PROJECT
+                 -e S3QL_URL=$S3QL_URL
+                 -e FS_PASSPHRASE=$FS_PASSPHRASE
+                 $IMAGE_TAG
+                 fsck.s3ql --batch $S3QL_URL
 
 publish:
   stage: publish
