@@ -4,8 +4,8 @@ RUN pip install --upgrade --no-cache-dir setuptools pycrypto defusedxml requests
 RUN TAG=$(curl -s "https://api.github.com/repos/s3ql/s3ql/releases/latest"|jq -r .tag_name -) \
  && FILE="$(echo "$TAG"|sed s/release/s3ql/)" \
  && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2" -o "/tmp/$FILE.tar.bz2" \
- && gpg2 --batch --keyserver https://pgp.key-server.io --recv-key 0xD113FCAC3C4E599F \
- && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2.asc" | gpg2 --verify - "/tmp/$FILE.tar.bz2" \
+ && gpg2 --batch --recv-key 0xD113FCAC3C4E599F \
+ && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.bz2" \
  && tar -xjf "/tmp/$FILE.tar.bz2" \
  && cd $FILE \
  && python3 setup.py build_ext --inplace \
