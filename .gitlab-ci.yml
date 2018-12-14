@@ -16,10 +16,8 @@ check_sh:
     - "find . -name '*.sh' -type f -print0 | xargs -n 1 -t -0 sh -n"
 
 shellcheck:
-  image: debian:stable-slim
+  image: koalaman/shellcheck-alpine
   stage: shellcheck
-  before_script:
-    - "apt-get update -qq && apt-get install -y shellcheck"
   script:
     - "find . -name '*.sh' -type f -print0 | LC_ALL=C.UTF-8 xargs -n 1 -t -0 shellcheck"
   allow_failure: true
