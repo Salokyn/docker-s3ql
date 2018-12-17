@@ -62,7 +62,11 @@ services:
   s3ql:
     image: registry.gitlab.com/salokyn/docker-s3ql
     volumes:
-      - s3ql:/s3ql:rw,rshared
+      - type: volume
+        source: s3ql
+        target: /s3ql
+        bind:
+          propagation: rshared
     environment:
       - S3QL_PASSWORD=myPassword
       - S3QL_USERNAME=myLogin
