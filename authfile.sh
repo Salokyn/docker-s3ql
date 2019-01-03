@@ -13,7 +13,7 @@ if [ ! -f "$AUTHFILE" ]
 then
   echo "Creating $AUTHFILE..." >&2
   
-  if [ -z "$S3QL_PROJECT" ] || [ -z "$S3QL_USERNAME" ] || [ -z "$S3QL_PASSWORD" ] || [ -z "$S3QL_URL" ]
+  if [ -z "$S3QL_USERNAME" ] || [ -z "$S3QL_PASSWORD" ] || [ -z "$S3QL_URL" ]
   then
     echo "Missing \$S3QL_* environment variables." >&2
     error
@@ -24,9 +24,11 @@ then
     mkdir -p "$S3QL_HOME" || error
   fi
 
+  S3QL_LOGIN=$([ -z "$S3QL_PROJECT" ] && echo "$S3QL_USERNAME" || echo "$S3QL_PROJECT:$S3QL_USERNAME")
+
   {
     echo "[s3ql]";
-    echo "backend-login: $S3QL_PROJECT:$S3QL_USERNAME";
+    echo "backend-login: $S3QL_LOGIN";
     echo "backend-password: $S3QL_PASSWORD";
     echo "storage-url: $S3QL_URL"
   } > "$AUTHFILE"
