@@ -5,7 +5,7 @@
 S3QL is a file system that stores all its data online using storage services like Google Storage, Amazon S3, or OpenStack. S3QL effectively provides a hard disk of dynamic, infinite capacity that can be accessed from any computer with internet access.
 http://www.rath.org/s3ql-docs/about.html
 
-This project aims to install S3QL in a Docker container and use it in a stack to store data on the cloud through volumes.
+This project aims to install S3QL in a Docker container and use it in a stack to store data on the cloud. Since *bind propagation is not configurable for volumes*, it can only be used through bind mounts.
 
 ## Warning
 
@@ -55,24 +55,19 @@ The best way to use it is in a `docker-compose.yml` file :
 ```yaml
 version: '3.5'
 
-volumes:
-  s3ql:
-
 services:
   s3ql:
     image: registry.gitlab.com/salokyn/docker-s3ql
     volumes:
-      - type: volume
-        source: s3ql
-        target: /s3ql
-        bind:
-          propagation: rshared
+      - /bind/path/on/host:/s3ql:shared
     environment:
       - S3QL_PASSWORD=myPassword
       - S3QL_USERNAME=myLogin
       - S3QL_PROJECT=myTenant
       - S3QL_URL=swiftks://openstack.backend/REGION:CONTAINER
       - FS_PASSPHRASE=mySecretPassphrase
+    security_opt:
+      - apparmor:unconfined 
     cap_add:
       - SYS_ADMIN
     devices:
@@ -81,12 +76,14 @@ services:
   
   app:
     ...
+    depends_on:
+      - s3ql
     volumes:
-      - s3ql:/s3ql
+      - /bind/path/on/host:/s3ql:slave
     ...
 ```
 
-Take care to use *rshared* [bind-propagation](https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation) to share S3QL mount with the host or another container.
+Take care to use [bind-propagation](https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation) to share S3QL mount with the host or another container.
 You should specify a *stop-timout* greater than default 10s since unmounting S3QL may be long.
 
 ## Create a S3QL FS
