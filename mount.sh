@@ -32,12 +32,8 @@ then
   
   trap 'term' TERM INT HUP
 
-  if [ -n "$S3QL_OPTIONS" ]
-  then
-    mount.s3ql "$S3QL_OPTIONS" --fg "$S3QL_URL" "$MOUNTPOINT" & PID=$!
-  else
-    mount.s3ql --fg "$S3QL_URL" "$MOUNTPOINT" & PID=$!
-  fi
+  # shellcheck disable=SC2086
+  mount.s3ql $S3QL_OPTIONS --fg "$S3QL_URL" "$MOUNTPOINT" & PID=$!
 
   wait $PID
 else
