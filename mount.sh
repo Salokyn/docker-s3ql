@@ -28,12 +28,13 @@ fi
 # Mount FS
 if [ -f "$AUTHFILE" ]
 then
-  fsck.s3ql --batch "$S3QL_URL" || error
+  # shellcheck disable=SC2086
+  fsck.s3ql $S3QL_FSCK_OPTIONS --batch "$S3QL_URL" || error
   
   trap 'term' TERM INT HUP
 
   # shellcheck disable=SC2086
-  mount.s3ql $S3QL_OPTIONS --fg "$S3QL_URL" "$MOUNTPOINT" & PID=$!
+  mount.s3ql $S3QL_MOUNT_OPTIONS --fg "$S3QL_URL" "$MOUNTPOINT" & PID=$!
 
   wait $PID
 else
