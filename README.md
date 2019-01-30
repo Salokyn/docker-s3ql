@@ -24,10 +24,10 @@ apt-get install fuse
 
 - `S3QL_USERNAME` and `S3QL_PASSWORD`: Cloud service credentials.
 - `S3QL_PROJECT`: Cloud project or tenant (OpenStack/Swift Backends only).
-- `S3QL_URL`: Depends on the backend. See http://www.rath.org/s3ql-docs/backends.html.
+- `S3QL_URL`: Depends on the backend. See [S3QL backends documentation](http://www.rath.org/s3ql-docs/backends.html).
 - `FS_PASSPHRASE`: S3QL FS may be encrypted. This is the passphrase to unlock the AES 256 encryption key.
-- `S3QL_MOUNT_OPTIONS`: Options be added to the `mount.s3ql` command in addition to `--fg`. See http://www.rath.org/s3ql-docs/man/mount.html .
-- `S3QL_FSCK_OPTIONS`: Options to be added to the `fsck.s3ql` command in addition to `--batch`. See http://www.rath.org/s3ql-docs/man/fsck.html .
+- `S3QL_MOUNT_OPTIONS`: Options be added to the `mount.s3ql` command in addition to `--fg`. See [`mount.s3ql` documentation](http://www.rath.org/s3ql-docs/man/mount.html).
+- `S3QL_FSCK_OPTIONS`: Options to be added to the `fsck.s3ql` command in addition to `--batch`. See [`fsck.s3ql` documentation](http://www.rath.org/s3ql-docs/man/fsck.html) .
 
 ## Usage
 
