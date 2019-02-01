@@ -22,6 +22,7 @@ error() {
 # Create mountpoint if not exists
 if [ ! -d "$MOUNTPOINT" ] 
 then
+  echo "Creating $MOUNTPOINT..."
   mkdir -p "$MOUNTPOINT" || error
 fi
 
@@ -29,7 +30,11 @@ fi
 if [ -f "$AUTHFILE" ]
 then
   # shellcheck disable=SC2086
-  fsck.s3ql $S3QL_FSCK_OPTIONS --batch "$S3QL_URL" || error
+  fsck.s3ql $S3QL_FSCK_OPTIONS --batch "$S3QL_URL" & FSCK_RESULT=$?
+  if [ $FSCK_RESULT != 0 ] && [ $FSCK_RESULT != 128 ]; then
+    echo "fsck.s3ql reported errors! Exit code $FSCK_RESULT - see http://www.rath.org/s3ql-docs/man/fsck.html"
+    error
+  fi
   
   trap 'term' TERM INT HUP
 
