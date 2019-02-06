@@ -54,7 +54,7 @@ test:
                  --name firstmount
                  $IMAGE_TAG
     - sleep 30
-    - test $(docker ps --filter status=running -q) -eq 2
+    - test $(docker inspect -f {{.State.Running}} firstmount) -eq true
     - docker stop firstmount
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
                  -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
@@ -64,7 +64,7 @@ test:
                  --name secondmount
                  $IMAGE_TAG
     - sleep 30
-    - test $(docker ps --filter status=running -q) -eq 2
+    - test $(docker inspect -f {{.State.Running}} secondmount) -eq true
     - docker stop secondmount
 
 
