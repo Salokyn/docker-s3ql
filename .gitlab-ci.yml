@@ -57,6 +57,7 @@ test:
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
     - docker stop firstmount
+    - docker logs firstmount
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
                  -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
                  --cap-add SYS_ADMIN
@@ -68,6 +69,7 @@ test:
     - docker logs secondmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
     - docker stop secondmount
+    - docker logs secondmount
 
 
 publish:
