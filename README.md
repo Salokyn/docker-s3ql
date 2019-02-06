@@ -43,7 +43,8 @@ docker run -d -e S3QL_USERNAME=myLogin \
               -v /s3ql:/s3ql:rw,rshared \
               --cap-add SYS_ADMIN \
               --device /dev/fuse \
-              --stop-timeout 10m
+              --security-opt apparmor:unconfined \
+              --stop-timeout 10m \
               registry.gitlab.com/salokyn/docker-s3ql:latest
 ```
 
