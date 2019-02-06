@@ -65,7 +65,7 @@ test:
                  --name secondmount
                  $IMAGE_TAG
     - sleep 30
-    - docker logs firstmount
+    - docker logs secondmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
     - docker stop secondmount
 
