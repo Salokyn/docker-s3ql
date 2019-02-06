@@ -51,19 +51,19 @@ test:
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
                  --security-opt apparmor:unconfined
-                 --name s3ql
+                 --name firstmount
                  $IMAGE_TAG
     - sleep 30
-    - docker stop s3ql
+    - docker stop firstmount
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
                  -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
                  --security-opt apparmor:unconfined
-                 --name s3ql
+                 --name secondmount
                  $IMAGE_TAG
     - sleep 30
-    - docker stop s3ql
+    - docker stop secondmount
 
 
 publish:
