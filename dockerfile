@@ -1,8 +1,12 @@
-FROM python:3-alpine AS build
+FROM python:3-alpine AS base
+
+FROM base as build
+
+ARG TAG=release-2.33
+
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse-dev sqlite-dev
 RUN pip install --upgrade --no-cache-dir setuptools pycrypto defusedxml requests apsw llfuse dugong
-RUN TAG=$(curl -s "https://api.github.com/repos/s3ql/s3ql/releases/latest"|jq -r .tag_name -) \
- && FILE="$(echo "$TAG"|sed s/release/s3ql/)" \
+RUN FILE="$(echo "$TAG"|sed s/release/s3ql/)" \
  && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2" -o "/tmp/$FILE.tar.bz2" \
  && gpg2 --batch --recv-key 0xD113FCAC3C4E599F \
  && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.bz2" \
@@ -11,7 +15,7 @@ RUN TAG=$(curl -s "https://api.github.com/repos/s3ql/s3ql/releases/latest"|jq -r
  && python3 setup.py build_ext --inplace \
  && python3 setup.py install
 
-FROM python:3-alpine
+FROM base
 RUN apk --no-cache add fuse psmisc procps
 COPY --from=build /usr/local/bin/ /usr/local/bin/
 COPY --from=build /usr/local/lib/ /usr/local/lib/
