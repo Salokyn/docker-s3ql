@@ -54,6 +54,7 @@ test:
                  --name firstmount
                  $IMAGE_TAG
     - sleep 30
+    - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
     - docker stop firstmount
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
@@ -64,6 +65,7 @@ test:
                  --name secondmount
                  $IMAGE_TAG
     - sleep 30
+    - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
     - docker stop secondmount
 
