@@ -46,7 +46,7 @@ test:
                  -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
                  $IMAGE_TAG
                  mkfs.s3ql --force --plain swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
-    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD=abcdefg -e S3QL_PROJECT -e FS_PASSPHRASE
+    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
                  -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
