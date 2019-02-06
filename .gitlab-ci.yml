@@ -42,13 +42,21 @@ test:
     - docker:dind
   script:
     - docker pull $IMAGE_TAG
-    - docker run -e S3QL_USERNAME=$S3QL_USERNAME
-                 -e S3QL_PASSWORD=$S3QL_PASSWORD
-                 -e S3QL_PROJECT=$S3QL_PROJECT
+    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
                  -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
-                 -e FS_PASSPHRASE=$FS_PASSPHRASE
                  $IMAGE_TAG
-                 fsck.s3ql --batch swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+                 mkfs.s3ql --force swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
+                 -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+                 --name s3ql
+                 $IMAGE_TAG
+    - docker stop s3ql
+    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
+                 -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+                 --name s3ql
+                 $IMAGE_TAG
+    - docker stop s3ql
+
 
 publish:
   stage: publish
