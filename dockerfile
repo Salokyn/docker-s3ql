@@ -1,8 +1,9 @@
 FROM python:3-alpine AS base
 
+FROM base AS build
+
 ARG TAG=release-2.33
 
-FROM base AS build
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse-dev sqlite-dev
 RUN pip install --upgrade setuptools pycrypto defusedxml requests apsw llfuse dugong
 RUN pip install --install-option="--prefix=/root/.local" --ignore-installed pycrypto defusedxml requests apsw llfuse dugong
