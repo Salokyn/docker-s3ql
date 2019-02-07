@@ -31,8 +31,8 @@ build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
   script:
-    - docker pull $CI_REGISTRY/build-env || true
-    - docker build --cache-from $CI_REGISTRY/build-env -t $CI_REGISTRY/build-env -f dockerfile_build .
+    - docker pull $CI_REGISTRY_IMAGE/build-env || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE/build-env -t $CI_REGISTRY_IMAGE/build-env -f dockerfile_build .
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
