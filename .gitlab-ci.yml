@@ -33,6 +33,7 @@ build:
   script:
     - docker pull $CI_REGISTRY/build-env || true
     - docker build --cache-from $CI_REGISTRY/build-env -t $CI_REGISTRY/build-env -f dockerfile_build .
+    - docker push $CI_REGISTRY/build-env
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
