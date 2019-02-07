@@ -8,8 +8,9 @@ term() {
   if [ "$PID" -ne 0 ]
   then
     echo "Shutting down..." >&2
-    umount.s3ql "$MOUNTPOINT"
-    exit $?
+    umount.s3ql "$MOUNTPOINT" & UMOUNT_RESULT=$?
+    wait $PID
+    exit $UMOUNT_RESULT
   fi
 }
 
