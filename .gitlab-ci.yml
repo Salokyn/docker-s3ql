@@ -31,8 +31,8 @@ build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
   script:
-    - docker pull $IMAGE_TAG || true
-    - docker build --cache-from $IMAGE_TAG --pull -t $IMAGE_TAG .
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --pull -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
 test:
