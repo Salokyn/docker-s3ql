@@ -1,22 +1,16 @@
-FROM python:3-alpine AS base
-
-FROM base AS build
+FROM registry.gitlab.com/salokyn/docker-s3ql/build-env AS build
 
 ARG TAG=release-2.33
-
-RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse-dev sqlite-dev
-RUN pip install --upgrade setuptools pycrypto defusedxml requests apsw llfuse dugong
-RUN pip install --install-option="--prefix=/root/.local" --ignore-installed pycrypto defusedxml requests apsw llfuse dugong
-RUN FILE="$(echo "$TAG"|sed s/release/s3ql/)" \
+RUN set -x; \
+    FILE="$(echo "$TAG"|sed s/release/s3ql/)" \
  && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2" -o "/tmp/$FILE.tar.bz2" \
- && gpg2 --batch --recv-key 0xD113FCAC3C4E599F \
  && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.bz2" \
  && tar -xjf "/tmp/$FILE.tar.bz2" \
  && cd $FILE \
  && python3 setup.py build_ext --inplace \
  && python3 setup.py install --user
 
-FROM base
+FROM python:3-alpine
 RUN apk --no-cache add fuse psmisc
 COPY --from=build /root/.local/bin/ /usr/local/bin/
 COPY --from=build /root/.local/lib/ /usr/local/lib/
