@@ -1,6 +1,6 @@
 FROM registry.gitlab.com/salokyn/docker-s3ql/build-env AS build
 
-ARG TAG=release-2.33
+ARG TAG=release-3.0
 RUN set -x; \
     FILE="$(echo "$TAG"|sed s/release/s3ql/)" \
  && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2" -o "/tmp/$FILE.tar.bz2" \
