@@ -40,7 +40,7 @@ test:
     - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
                  -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
                  $IMAGE_TAG
-                 echo yes | s3qladm delete swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+                 echo yes | s3qladm clear swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
     - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
                  -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
                  $IMAGE_TAG
