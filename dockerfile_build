@@ -1,6 +1,5 @@
 FROM python:3-alpine
 
-RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse-dev sqlite-dev
-RUN pip install setuptools
+RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse-dev sqlite-dev libffi
 RUN pip install --install-option="--prefix=/root/.local" --ignore-installed cryptography defusedxml requests apsw llfuse dugong
 RUN gpg2 --batch --recv-key 0xD113FCAC3C4E599F
