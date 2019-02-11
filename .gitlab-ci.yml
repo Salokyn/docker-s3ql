@@ -42,7 +42,7 @@ test:
                  sh -c "echo yes|s3qladm clear $S3QL_URL"
     - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
                  $IMAGE_TAG
-                 mkfs.s3ql --plain swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+                 mkfs.s3ql --plain $S3QL_URL
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
