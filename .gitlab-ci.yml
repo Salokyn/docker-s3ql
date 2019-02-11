@@ -53,7 +53,7 @@ publish:
     - docker login -u salokyn -p $DOCKER_PASSWORD
   script:
     - docker pull $IMAGE_TAG
-    - VERSION=$(docker run registry.gitlab.com/salokyn/docker-s3ql s3qlstat --version|awk '{print $2}')
+    - VERSION=$(docker run $IMAGE_TAG s3qlstat --version|awk '{print $2}')
     - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
     - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:$VERSION
     - docker tag $IMAGE_TAG salokyn/docker-s3ql:latest
