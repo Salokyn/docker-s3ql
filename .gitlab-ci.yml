@@ -24,8 +24,10 @@ build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
   script:
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --pull -t $IMAGE_TAG .
+    - docker pull $CI_REGISTRY_IMAGE/build-env || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE/build-env --pull -t $CI_REGISTRY_IMAGE/build-env -f dockerfile_build .
+    - docker push $CI_REGISTRY_IMAGE/build-env
+    - docker build --pull -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
 test:
@@ -35,13 +37,35 @@ test:
     - docker:dind
   script:
     - docker pull $IMAGE_TAG
-    - docker run -e S3QL_USERNAME=$S3QL_USERNAME
-                 -e S3QL_PASSWORD=$S3QL_PASSWORD
-                 -e S3QL_PROJECT=$S3QL_PROJECT
-                 -e S3QL_URL=$S3QL_URL
-                 -e FS_PASSPHRASE=$FS_PASSPHRASE
+    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
                  $IMAGE_TAG
-                 fsck.s3ql --batch $S3QL_URL
+                 sh -c "echo yes|s3qladm clear $S3QL_URL"
+    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
+                 $IMAGE_TAG
+                 mkfs.s3ql --plain $S3QL_URL
+    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
+                 --cap-add SYS_ADMIN
+                 --device /dev/fuse
+                 --security-opt apparmor:unconfined
+                 --name firstmount
+                 $IMAGE_TAG
+    - sleep 30
+    - docker logs firstmount
+    - test $(docker inspect -f {{.State.Running}} firstmount) = true
+    - docker stop firstmount
+    - docker logs firstmount
+    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
+                 --cap-add SYS_ADMIN
+                 --device /dev/fuse
+                 --security-opt apparmor:unconfined
+                 --name secondmount
+                 $IMAGE_TAG
+    - sleep 30
+    - docker logs secondmount
+    - test $(docker inspect -f {{.State.Running}} secondmount) = true
+    - docker stop secondmount
+    - docker logs secondmount
+
 
 publish:
   stage: publish
