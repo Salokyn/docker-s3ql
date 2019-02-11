@@ -37,16 +37,13 @@ test:
     - docker:dind
   script:
     - docker pull $IMAGE_TAG
-    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
-                 -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
                  $IMAGE_TAG
-                 sh -c "echo yes|s3qladm clear swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/"
-    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
-                 -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+                 sh -c "echo yes|s3qladm clear $S3QL_URL"
+    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
                  $IMAGE_TAG
                  mkfs.s3ql --plain swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
-    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
-                 -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
                  --security-opt apparmor:unconfined
@@ -57,8 +54,7 @@ test:
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
     - docker stop firstmount
     - docker logs firstmount
-    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE
-                 -e S3QL_URL=swiftks://auth.cloud.ovh.net/GRA1:test-s3ql_2/
+    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
                  --security-opt apparmor:unconfined
