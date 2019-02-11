@@ -6,6 +6,7 @@ stages:
 
 variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  S3QL_RELEASE: release-3.0
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
 
@@ -24,10 +25,10 @@ build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
   script:
-    - docker pull $CI_REGISTRY_IMAGE/build-env || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE/build-env --pull -t $CI_REGISTRY_IMAGE/build-env -f dockerfile_build .
-    - docker push $CI_REGISTRY_IMAGE/build-env
-    - docker build --pull -t $IMAGE_TAG .
+    - docker pull $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE || true
+    - docker build --cache-from $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE --pull --target build -t $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE --build-arg S3QL_RELEASE .
+    - docker push $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE
+    - docker build --cache-from $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE --pull -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
 
 test:
