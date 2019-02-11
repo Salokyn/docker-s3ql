@@ -41,6 +41,20 @@ test:
                  -e S3QL_URL=$S3QL_URL
                  -e FS_PASSPHRASE=$FS_PASSPHRASE
                  $IMAGE_TAG
+                 sh -c "echo yes|s3qladm clear $S3QL_URL"
+    - docker run -e S3QL_USERNAME=$S3QL_USERNAME
+                 -e S3QL_PASSWORD=$S3QL_PASSWORD
+                 -e S3QL_PROJECT=$S3QL_PROJECT
+                 -e S3QL_URL=$S3QL_URL
+                 -e FS_PASSPHRASE=$FS_PASSPHRASE
+                 $IMAGE_TAG
+                 mkfs.s3ql --plain $S3QL_URL
+    - docker run -e S3QL_USERNAME=$S3QL_USERNAME
+                 -e S3QL_PASSWORD=$S3QL_PASSWORD
+                 -e S3QL_PROJECT=$S3QL_PROJECT
+                 -e S3QL_URL=$S3QL_URL
+                 -e FS_PASSPHRASE=$FS_PASSPHRASE
+                 $IMAGE_TAG
                  fsck.s3ql --batch $S3QL_URL
 
 publish:
