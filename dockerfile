@@ -1,10 +1,14 @@
-FROM registry.gitlab.com/salokyn/docker-s3ql/build-env AS build
+FROM python:3-alpine AS build
 
-ARG TAG=release-3.0
+RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse-dev sqlite-dev libffi-dev openssl-dev
+RUN pip install --install-option="--prefix=/root/.local" --ignore-installed cryptography defusedxml requests apsw llfuse dugong
+RUN gpg2 --batch --recv-key 0xD113FCAC3C4E599F
+ARG S3QL_VERSION
 RUN set -x; \
-    FILE="$(echo "$TAG"|sed s/release/s3ql/)" \
- && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2" -o "/tmp/$FILE.tar.bz2" \
- && curl -sfL "https://github.com/s3ql/s3ql/releases/download/$TAG/$FILE.tar.bz2.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.bz2" \
+    FILE="s3ql-$S3QL_VERSION" \
+ && URL="https://github.com/s3ql/s3ql/releases/download/release-$S3QL_VERSION/$FILE.tar.bz2" \
+ && curl -sfL "$URL" -o "/tmp/$FILE.tar.bz2" \
+ && curl -sfL "$URL.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.bz2" \
  && tar -xjf "/tmp/$FILE.tar.bz2" \
  && cd $FILE \
  && python3 setup.py build_ext --inplace \
