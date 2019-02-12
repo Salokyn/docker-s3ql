@@ -5,8 +5,9 @@ stages:
   - publish
 
 variables:
+  S3QL_VERSION: "3.0"
+  BUILD_TAG: $CI_REGISTRY_IMAGE/s3ql-build:$S3QL_VERSION
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  S3QL_RELEASE: release-3.0
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
 
@@ -25,10 +26,10 @@ build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
   script:
-    - docker pull $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE || true
-    - docker build --cache-from $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE --pull --target build -t $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE --build-arg S3QL_RELEASE .
-    - docker push $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE
-    - docker build --cache-from $CI_REGISTRY_IMAGE/build-env:$S3QL_RELEASE --pull -t $IMAGE_TAG .
+    - docker pull $BUILD_TAG || true
+    - docker build --cache-from $BUILD_TAG --pull --target build -t $BUILD_TAG --build-arg S3QL_VERSION .
+    - docker push $BUILD_TAG
+    - docker build --cache-from $BUILD_TAG --pull -t $IMAGE_TAG --build-arg S3QL_VERSION .
     - docker push $IMAGE_TAG
 
 test:
@@ -78,15 +79,14 @@ publish:
     - docker login -u salokyn -p $DOCKER_PASSWORD
   script:
     - docker pull $IMAGE_TAG
-    - VERSION=$(docker run registry.gitlab.com/salokyn/docker-s3ql s3qlstat --version|awk '{print $2}')
     - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
-    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:$VERSION
+    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:$S3QL_VERSION
     - docker tag $IMAGE_TAG salokyn/docker-s3ql:latest
-    - docker tag $IMAGE_TAG salokyn/docker-s3ql:$VERSION
+    - docker tag $IMAGE_TAG salokyn/docker-s3ql:$S3QL_VERSION
     - docker push $CI_REGISTRY_IMAGE:latest
-    - docker push $CI_REGISTRY_IMAGE:$VERSION
+    - docker push $CI_REGISTRY_IMAGE:$S3QL_VERSION
     - docker push salokyn/docker-s3ql:latest
-    - docker push salokyn/docker-s3ql:$VERSION
+    - docker push salokyn/docker-s3ql:$S3QL_VERSION
   only:
     - master
   
