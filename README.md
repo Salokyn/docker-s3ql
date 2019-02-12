@@ -9,9 +9,14 @@ This project aims to install S3QL in a Docker container and use it in a stack to
 
 ## Warning
 
-This project is **experimental** and is **not even fully tested**. To use only for tests purpose.
+This project is **experimental** and **not fully tested**. Use it at your own risk.
 
-For now, this very project has only been written for Openstak Swift containers (it may work for other anyway).
+So far, it has been tested with the following storage backends:
+
+- [OpenStack Swift](https://docs.openstack.org/swift/latest/) (used in the CI/CD testing stage)
+- [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/) 
+
+If you encounter any issues with other storage backends, feel free to [submit an Issue](https://gitlab.com/Salokyn/docker-s3ql/issues) or, preferably, directly file a [Merge Request](https://gitlab.com/Salokyn/docker-s3ql/merge_requests).
 
 ## Requirements
 `fuse` must be installed on the host.
