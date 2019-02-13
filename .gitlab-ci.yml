@@ -29,7 +29,8 @@ build:
     - docker pull $BUILD_TAG || true
     - docker build --cache-from $BUILD_TAG --pull --target build -t $BUILD_TAG --build-arg S3QL_VERSION .
     - docker push $BUILD_TAG
-    - docker build --cache-from $BUILD_TAG --pull -t $IMAGE_TAG --build-arg S3QL_VERSION .
+    - docker pull $IMAGE_TAG || true
+    - docker build --cache-from $BUILD_TAG --cache-from $IMAGE_TAG --pull -t $IMAGE_TAG --build-arg S3QL_VERSION .
     - docker push $IMAGE_TAG
 
 test:
