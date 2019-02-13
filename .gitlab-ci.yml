@@ -16,7 +16,6 @@ shellcheck:
   stage: shellcheck
   script:
     - "find . -name '*.sh' -type f -print0 | LC_ALL=C.UTF-8 xargs -n 1 -t -0 shellcheck"
-  allow_failure: true
 
 build:
   stage: build
