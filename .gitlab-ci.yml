@@ -40,8 +40,8 @@ test:
   variables:
     RUN_ENV: -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
     RUN_MOUNT_ARGS: $RUN_ENV --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined
-    TEST_FILE: /s3ql/test.txt
-    TEST_CONTENT: S3QL_TEST_FILE_CONTENTS
+    TEST_FILE: test.bin
+    TEST_PATH: /s3ql/$TEST_FILE
   script:
     - docker pull $IMAGE_TAG
     # Create clean file system
@@ -49,24 +49,26 @@ test:
     - docker run $RUN_ENV $IMAGE_TAG mkfs.s3ql --plain $S3QL_URL
     # Mount file system for the first time
     - docker run -d --name firstmount $RUN_MOUNT_ARGS $IMAGE_TAG
-    - sleep 30
+    - sleep 10
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
     # Write a file
-    - docker exec firstmount sh -c "echo $TEST_CONTENT > $TEST_FILE"
-    - docker exec firstmount sh -c "test -f $TEST_FILE"
+    - dd if=/dev/random of=$TEST_FILE bs=1M count=1
+    - TEST_HASH=$(sha1sum $TEST_FILE | awk '{print $1}')
+    - docker cp $TEST_FILE firstmount:$TEST_PATH
+    - docker exec firstmount sh -c "test -f $TEST_PATH"
     # Stop container and verify that file is not available anymore after unmounting
     - docker stop firstmount
     - docker logs firstmount
-    - docker run $RUN_ENV $IMAGE_TAG sh -c "test ! -e $TEST_FILE"
+    - docker run $RUN_ENV $IMAGE_TAG sh -c "test ! -e $TEST_PATH"
     # Mount file system for the second time
     - docker run -d --name secondmount $RUN_MOUNT_ARGS $IMAGE_TAG
-    - sleep 30
+    - sleep 10
     - docker logs secondmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
     # Check that test file is there
-    - docker exec secondmount sh -c "test -f $TEST_FILE"
-    - docker exec secondmount sh -c "CONTENT=\$(cat $TEST_FILE); test \$CONTENT = '$TEST_CONTENT'"
+    - docker exec secondmount sh -c "test -f $TEST_PATH"
+    - docker exec secondmount sh -c "test \$(sha1sum $TEST_PATH | awk '{print \$1}') = $TEST_HASH"
     # Stop container again
     - docker stop secondmount
     - docker logs secondmount
