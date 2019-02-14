@@ -37,35 +37,27 @@ test:
   image: docker:latest
   services:
     - docker:dind
+  variables:
+    IMAGE_ENV: -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
+    RUN_MOUNT_ARGS: $IMAGE_ENV --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined
   script:
     - docker pull $IMAGE_TAG
-    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
-                 $IMAGE_TAG
-                 sh -c "echo yes|s3qladm clear $S3QL_URL"
-    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
-                 $IMAGE_TAG
-                 mkfs.s3ql --plain $S3QL_URL
-    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
-                 --cap-add SYS_ADMIN
-                 --device /dev/fuse
-                 --security-opt apparmor:unconfined
-                 --name firstmount
-                 $IMAGE_TAG
+    - docker run $IMAGE_ENV $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
+    - docker run $IMAGE_ENV $IMAGE_TAG mkfs.s3ql --plain $S3QL_URL
+    - docker run -d --name firstmount $RUN_MOUNT_ARGS $IMAGE_TAG
     - sleep 30
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
     - docker exec firstmount sh -c "echo DOCKER-S3QL > /s3ql/test.txt"
+    - test $(docker exec $IMAGE_ENV sh -c "ls /s3ql" ) = test.txt
     - docker stop firstmount
     - docker logs firstmount
-    - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
-                 --cap-add SYS_ADMIN
-                 --device /dev/fuse
-                 --security-opt apparmor:unconfined
-                 --name secondmount
-                 $IMAGE_TAG
+    - test $(docker run $IMAGE_ENV sh -c "ls /s3ql" ) = ''
+    - docker run -d --name secondmount $RUN_MOUNT_ARGS $IMAGE_TAG
     - sleep 30
     - docker logs secondmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
+    - test $(docker exec $RUN_ENV sh -c "ls /s3ql" ) = test.txt
     - test $(docker exec secondmount sh -c "cat /s3ql/test.txt") = DOCKER-S3QL
     - docker stop secondmount
     - docker logs secondmount
