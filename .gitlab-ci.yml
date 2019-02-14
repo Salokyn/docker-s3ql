@@ -63,7 +63,7 @@ test:
     - docker logs secondmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
     # Check that test file is there
-    - test $(docker exec secondmount sh -c "ls /s3ql" ) = test.txt
+    - test $(docker exec secondmount sh -c "ls /s3ql") = 'test.txt'
     - test $(docker exec secondmount sh -c "cat /s3ql/test.txt") = DOCKER-S3QL
     # Stop container again
     - docker stop secondmount
