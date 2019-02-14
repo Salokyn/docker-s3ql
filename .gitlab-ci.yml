@@ -52,11 +52,11 @@ test:
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
     # Write a file
     - docker exec firstmount sh -c "echo DOCKER-S3QL > /s3ql/test.txt"
-    - test $(docker exec firstmount sh -c "ls /s3ql" ) = test.txt
+    - test $(docker exec firstmount sh -c "ls /s3ql") = 'test.txt'
     # Stop container and verify that file is not available anymore after unmounting
     - docker stop firstmount
     - docker logs firstmount
-    - test $(docker run $RUN_ENV $IMAGE_TAG sh -c "ls /s3ql" ) = ''
+    - test $(docker run $RUN_ENV $IMAGE_TAG sh -c "ls /s3ql") = ''
     # Mount file system for the second time
     - docker run -d --name secondmount $RUN_MOUNT_ARGS $IMAGE_TAG
     - sleep 30
