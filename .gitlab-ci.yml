@@ -54,7 +54,7 @@ test:
     - sleep 30
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
-    - docker exec firstmount sh -c "echo DOCKER-S3QL > /s3ql/test.txt"
+    - docker exec firstmount sh -c "echo DOCKER-S3 > /s3ql/test.txt"
     - docker stop firstmount
     - docker logs firstmount
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
