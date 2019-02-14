@@ -39,7 +39,7 @@ test:
     - docker:dind
   variables:
     RUN_ENV: -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
-    RUN_MOUNT_ARGS: $IMAGE_ENV --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined
+    RUN_MOUNT_ARGS: $RUN_ENV --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined
   script:
     - docker pull $IMAGE_TAG
     # Create clean file system
