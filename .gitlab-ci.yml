@@ -55,7 +55,9 @@ test:
     # Write a file
     - dd if=/dev/random of=$TEST_FILE bs=1M count=1
     - TEST_HASH=$(sha1sum $TEST_FILE | awk '{print $1}')
+    - echo $TEST_HASH
     - docker cp $TEST_FILE firstmount:$TEST_PATH
+    - docker exec firstmount ls $TEST_PATH
     - docker exec firstmount sh -c "test -f $TEST_PATH"
     # Stop container and verify that file is not available anymore after unmounting
     - docker stop firstmount
