@@ -38,27 +38,34 @@ test:
   services:
     - docker:dind
   variables:
-    IMAGE_ENV: -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
+    RUN_ENV: -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
     RUN_MOUNT_ARGS: $IMAGE_ENV --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined
   script:
     - docker pull $IMAGE_TAG
-    - docker run $IMAGE_ENV $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
-    - docker run $IMAGE_ENV $IMAGE_TAG mkfs.s3ql --plain $S3QL_URL
+    # Create clean file system
+    - docker run $RUN_ENV $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
+    - docker run $RUN_ENV $IMAGE_TAG mkfs.s3ql --plain $S3QL_URL
+    # Mount file system for the first time
     - docker run -d --name firstmount $RUN_MOUNT_ARGS $IMAGE_TAG
     - sleep 30
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
+    # Write a file
     - docker exec firstmount sh -c "echo DOCKER-S3QL > /s3ql/test.txt"
-    - test $(docker exec $IMAGE_ENV sh -c "ls /s3ql" ) = test.txt
+    - test $(docker exec firstmount sh -c "ls /s3ql" ) = test.txt
+    # Stop container and verify that file is not available anymore after unmounting
     - docker stop firstmount
     - docker logs firstmount
-    - test $(docker run $IMAGE_ENV sh -c "ls /s3ql" ) = ''
+    - test $(docker run $RUN_ENV $IMAGE_TAG sh -c "ls /s3ql" ) = ''
+    # Mount file system for the second time
     - docker run -d --name secondmount $RUN_MOUNT_ARGS $IMAGE_TAG
     - sleep 30
     - docker logs secondmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
-    - test $(docker exec $RUN_ENV sh -c "ls /s3ql" ) = test.txt
+    # Check that test file is there
+    - test $(docker exec secondmount sh -c "ls /s3ql" ) = test.txt
     - test $(docker exec secondmount sh -c "cat /s3ql/test.txt") = DOCKER-S3QL
+    # Stop container again
     - docker stop secondmount
     - docker logs secondmount
 
