@@ -56,9 +56,9 @@ test:
     - dd if=/dev/random of=$TEST_FILE bs=1M count=1
     - TEST_HASH=$(sha1sum $TEST_FILE | awk '{print $1}')
     - echo $TEST_HASH
-    - docker exec firstmount ls /s3ql
-    - docker cp $TEST_FILE firstmount:/s3ql
-    - docker exec firstmount ls /s3ql
+    - docker exec firstmount ls /root
+    - docker cp $TEST_FILE firstmount:/root
+    - docker exec firstmount ls /root
     - docker exec firstmount sh -c "test -f $TEST_PATH"
     # Stop container and verify that file is not available anymore after unmounting
     - docker stop firstmount
