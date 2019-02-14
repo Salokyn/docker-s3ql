@@ -40,6 +40,8 @@ test:
   variables:
     RUN_ENV: -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
     RUN_MOUNT_ARGS: $RUN_ENV --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined
+    TEST_FILE: /s3ql/test.txt
+    TEST_CONTENT: This is a pretty test string to verify correct S3QL functionality.
   script:
     - docker pull $IMAGE_TAG
     # Create clean file system
@@ -51,20 +53,20 @@ test:
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
     # Write a file
-    - docker exec firstmount sh -c "echo DOCKER-S3QL > /s3ql/test.txt"
-    - docker exec firstmount sh -c "test -f /s3ql/test.txt"
+    - docker exec firstmount sh -c "echo $TEST_CONTENT > $TEST_FILE"
+    - docker exec firstmount sh -c "test -f $TEST_FILE"
     # Stop container and verify that file is not available anymore after unmounting
     - docker stop firstmount
     - docker logs firstmount
-    - docker run $RUN_ENV $IMAGE_TAG sh -c "test ! -e /s3ql/test.txt"
+    - docker run $RUN_ENV $IMAGE_TAG sh -c "test ! -e $TEST_FILE"
     # Mount file system for the second time
     - docker run -d --name secondmount $RUN_MOUNT_ARGS $IMAGE_TAG
     - sleep 30
     - docker logs secondmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
     # Check that test file is there
-    - docker exec secondmount sh -c "test -f /s3ql/test.txt"
-    - docker exec secondmount sh -c "CONTENT=\$(cat /s3ql/test.txt); test \$CONTENT = 'DOCKER-S3QL'"
+    - docker exec secondmount sh -c "test -f $TEST_FILE"
+    - docker exec secondmount sh -c "CONTENT=\$(cat $TEST_FILE); test \$CONTENT = '$TEST_CONTENT'"
     # Stop container again
     - docker stop secondmount
     - docker logs secondmount
