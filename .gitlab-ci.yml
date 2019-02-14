@@ -46,7 +46,7 @@ test:
                  $IMAGE_TAG
                  mkfs.s3ql --plain $S3QL_URL
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
-                 -v ./s3ql:/s3ql:rw,shared \
+                 -v ./s3ql:/s3ql:rw,shared
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
                  --security-opt apparmor:unconfined
@@ -59,6 +59,7 @@ test:
     - docker stop firstmount
     - docker logs firstmount
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
+                 -v ./s3ql:/s3ql:rw,shared
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
                  --security-opt apparmor:unconfined
