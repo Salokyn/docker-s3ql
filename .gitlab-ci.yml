@@ -46,7 +46,7 @@ test:
                  $IMAGE_TAG
                  mkfs.s3ql --plain $S3QL_URL
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
-                 -v ./s3ql:/s3ql:rw,shared
+                 -v "$(pwd)"/s3ql:/s3ql:rw,shared
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
                  --security-opt apparmor:unconfined
@@ -55,11 +55,11 @@ test:
     - sleep 30
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
-    - echo DOCKER-S3QL > ./s3ql/test.txt
+    - echo DOCKER-S3QL > s3ql/test.txt
     - docker stop firstmount
     - docker logs firstmount
     - docker run -d -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
-                 -v ./s3ql:/s3ql:rw,shared
+                 -v "$(pwd)"/s3ql:/s3ql:rw,shared
                  --cap-add SYS_ADMIN
                  --device /dev/fuse
                  --security-opt apparmor:unconfined
@@ -68,7 +68,7 @@ test:
     - sleep 30
     - docker logs secondmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
-    - test $(cat ./s3ql/test.txt) = DOCKER-S3QL
+    - test $(cat s3ql/test.txt) = DOCKER-S3QL
     - docker stop secondmount
     - docker logs secondmount
 
