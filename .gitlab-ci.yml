@@ -41,7 +41,7 @@ test:
     RUN_ENV: -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
     RUN_MOUNT_ARGS: $RUN_ENV --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined
     TEST_FILE: /s3ql/test.txt
-    TEST_CONTENT: This is a pretty test string to verify correct S3QL functionality.
+    TEST_CONTENT: S3QL_TEST_FILE_CONTENTS
   script:
     - docker pull $IMAGE_TAG
     # Create clean file system
