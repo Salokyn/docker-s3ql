@@ -49,7 +49,7 @@ test:
     - docker run $RUN_ENV $IMAGE_TAG mkfs.s3ql --plain $S3QL_URL
     # Mount file system for the first time
     - docker run -d --name firstmount $RUN_MOUNT_ARGS $IMAGE_TAG
-    - sleep 10
+    - sleep 20
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
     # Write a file
@@ -64,7 +64,7 @@ test:
     - docker run $RUN_ENV $IMAGE_TAG sh -c "test ! -e $TEST_PATH"
     # Mount file system for the second time
     - docker run -d --name secondmount $RUN_MOUNT_ARGS $IMAGE_TAG
-    - sleep 10
+    - sleep 20
     - docker logs secondmount
     - test $(docker inspect -f {{.State.Running}} secondmount) = true
     # Check that test file is there
