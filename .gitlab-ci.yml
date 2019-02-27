@@ -73,7 +73,8 @@ test:
     # Stop container again
     - docker stop secondmount
     - docker logs secondmount
-
+    # Clear file system
+    - docker run $RUN_ENV $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
 
 publish:
   stage: publish
