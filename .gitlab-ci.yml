@@ -91,7 +91,7 @@ test:bigfile:
     TEST_PATH: /s3ql/$TEST_FILE
   script:
     # Write a file
-    - dd if=/dev/random of=$TEST_FILE bs=1M count=100
+    - dd if=/dev/zero of=$TEST_FILE bs=1M count=100
     - TEST_HASH=$(sha1sum $TEST_FILE | awk '{print $1}')
     # Pull image
     - docker pull $IMAGE_TAG
