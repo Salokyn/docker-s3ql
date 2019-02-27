@@ -98,7 +98,7 @@ test:bigfile:
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
     # Write a file
-    - dd if=/dev/random of=$TEST_FILE bs=1M count=500
+    - dd if=/dev/random of=$TEST_FILE bs=1M count=100
     - TEST_HASH=$(sha1sum $TEST_FILE | awk '{print $1}')
     - docker cp $TEST_FILE firstmount:/
     - docker exec firstmount sh -c "mv $TEST_FILE $TEST_PATH"
