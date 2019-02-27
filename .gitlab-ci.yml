@@ -44,6 +44,10 @@ test:
     TEST_FILE: test.bin
     TEST_PATH: /s3ql/$TEST_FILE
   script:
+    # Write a file
+    - dd if=/dev/random of=$TEST_FILE bs=1M count=1
+    - TEST_HASH=$(sha1sum $TEST_FILE | awk '{print $1}')
+    # Pull image
     - docker pull $IMAGE_TAG
     # Create clean file system
     - docker run $RUN_ENV $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
@@ -53,9 +57,7 @@ test:
     - sleep 20
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
-    # Write a file
-    - dd if=/dev/random of=$TEST_FILE bs=1M count=1
-    - TEST_HASH=$(sha1sum $TEST_FILE | awk '{print $1}')
+    # Mve the file
     - docker cp $TEST_FILE firstmount:/
     - docker exec firstmount sh -c "mv $TEST_FILE $TEST_PATH"
     - docker exec firstmount sh -c "test -f $TEST_PATH"
@@ -88,6 +90,10 @@ test:bigfile:
     TEST_FILE: test.bin
     TEST_PATH: /s3ql/$TEST_FILE
   script:
+    # Write a file
+    - dd if=/dev/random of=$TEST_FILE bs=1M count=100
+    - TEST_HASH=$(sha1sum $TEST_FILE | awk '{print $1}')
+    # Pull image
     - docker pull $IMAGE_TAG
     # Create clean file system
     - docker run $RUN_ENV $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
@@ -97,9 +103,7 @@ test:bigfile:
     - sleep 20
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
-    # Write a file
-    - dd if=/dev/random of=$TEST_FILE bs=1M count=100
-    - TEST_HASH=$(sha1sum $TEST_FILE | awk '{print $1}')
+    # Move file
     - docker cp $TEST_FILE firstmount:/
     - docker exec firstmount sh -c "mv $TEST_FILE $TEST_PATH"
     - docker exec firstmount sh -c "test -f $TEST_PATH"
