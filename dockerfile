@@ -1,7 +1,7 @@
 FROM python:3-alpine AS build
 
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse-dev sqlite-dev libffi-dev openssl-dev
-RUN pip install --install-option="--prefix=/root/.local" --ignore-installed cryptography defusedxml requests apsw llfuse dugong
+RUN pip install --install-option="--prefix=/root/.local" --ignore-installed cryptography defusedxml requests apsw llfuse dugong google-auth google-auth-oauthlib
 RUN gpg2 --batch --recv-key 0xD113FCAC3C4E599F
 ARG S3QL_VERSION
 RUN set -x; \
