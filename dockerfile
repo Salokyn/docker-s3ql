@@ -10,7 +10,7 @@ RUN set -x; \
  && curl -sfL "$URL.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.bz2" \
  && tar -xjf "/tmp/$FILE.tar.bz2" \
  && cd $FILE \
- && pip install --install-option="--prefix=/root/.local" --ignore-installed .
+ && pip install --install-option="--prefix=/root/.local" --ignore-installed . \
  && python3 setup.py build_ext --inplace \
  && python3 setup.py install --user
 
