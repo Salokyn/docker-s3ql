@@ -1,6 +1,8 @@
 FROM python:3-alpine AS build
 
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse-dev sqlite-dev libffi-dev openssl-dev
+RUN pip install --install-option="--prefix=/root/.local" --ignore-installed . \
+    cryptography defusedxml requests "apsw >= 3.7.0" "llfuse >= 1.0, < 2.0" "dugong >= 3.4, < 4.0" google-auth google-auth-oauthlib
 RUN gpg2 --batch --recv-key 0xD113FCAC3C4E599F
 ARG S3QL_VERSION
 RUN set -x; \
@@ -10,7 +12,6 @@ RUN set -x; \
  && curl -sfL "$URL.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.bz2" \
  && tar -xjf "/tmp/$FILE.tar.bz2" \
  && cd $FILE \
- && pip install --install-option="--prefix=/root/.local" --ignore-installed . \
  && python3 setup.py build_ext --inplace \
  && python3 setup.py install --user
 
