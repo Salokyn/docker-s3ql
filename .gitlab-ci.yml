@@ -5,7 +5,7 @@ stages:
   - publish
 
 variables:
-  S3QL_VERSION: "3.0"
+  S3QL_VERSION: "3.1"
   BUILD_TAG: $CI_REGISTRY_IMAGE/s3ql-build:$S3QL_VERSION
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   DOCKER_HOST: tcp://docker:2375
