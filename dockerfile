@@ -5,14 +5,14 @@ RUN pip install --user --ignore-installed \
     cryptography defusedxml requests "apsw >= 3.7.0" "llfuse >= 1.0, < 2.0" "dugong >= 3.4, < 4.0" google-auth google-auth-oauthlib
 RUN gpg2 --batch --recv-key 0xD113FCAC3C4E599F
 ARG S3QL_VERSION
+ARG FILE="s3ql-$S3QL_VERSION"
+ARG URL="https://github.com/s3ql/s3ql/releases/download/release-$S3QL_VERSION/$FILE.tar.bz2"
 RUN set -x; \
-    FILE="s3ql-$S3QL_VERSION" \
- && URL="https://github.com/s3ql/s3ql/releases/download/release-$S3QL_VERSION/$FILE.tar.bz2" \
- && curl -sfL "$URL" -o "/tmp/$FILE.tar.bz2" \
+    curl -sfL "$URL" -o "/tmp/$FILE.tar.bz2" \
  && curl -sfL "$URL.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.bz2" \
- && tar -xjf "/tmp/$FILE.tar.bz2" \
- && cd $FILE \
- && python3 setup.py build_ext --inplace \
+ && tar -xjf "/tmp/$FILE.tar.bz2"
+WORKDIR $FILE
+RUN python3 setup.py build_ext --inplace \
  && python3 setup.py install --user
 
 FROM python:3.7-alpine
