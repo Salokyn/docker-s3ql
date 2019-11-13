@@ -25,7 +25,16 @@ If you encounter any issues with other storage backends, feel free to [submit an
 apt-get install fuse
 ```
 
-## Environment variables
+## Build
+S3QL version must be privided in variable `S3QL_VERSION` for the image to be build.
+
+```shell
+docker build -t docker-s3ql --build-arg S3QL_VERSION=3.3.2 .
+```
+
+## Usage
+
+### Environment variables
 
 - `S3QL_USERNAME` and `S3QL_PASSWORD`: Cloud service credentials.
 - `S3QL_PROJECT`: Cloud project or tenant (OpenStack/Swift Backends only).
@@ -34,9 +43,7 @@ apt-get install fuse
 - `S3QL_MOUNT_OPTIONS`: Options be added to the `mount.s3ql` command in addition to `--fg`. See [`mount.s3ql` documentation](http://www.rath.org/s3ql-docs/man/mount.html).
 - `S3QL_FSCK_OPTIONS`: Options to be added to the `fsck.s3ql` command in addition to `--batch`. See [`fsck.s3ql` documentation](http://www.rath.org/s3ql-docs/man/fsck.html) .
 
-## Usage
-
-The image can be used from the project's registry: 
+### Mount a S3QL FS
 
 ```shell
 docker pull registry.gitlab.com/salokyn/docker-s3ql:latest
@@ -53,7 +60,7 @@ docker run -d -e S3QL_USERNAME=myLogin \
               registry.gitlab.com/salokyn/docker-s3ql:latest
 ```
 
-The best way to use it is in a `docker-compose.yml` file :
+You can also use a `docker-compose.yml` file :
 
 ```yaml
 version: '3.5'
@@ -89,7 +96,7 @@ services:
 Take care to use [bind-propagation](https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation) to share S3QL mount with the host or another container.
 You should specify a *stop-timout* greater than default 10s since unmounting S3QL may be long.
 
-## Create a S3QL FS
+### Create a S3QL FS
 ```shell
 docker pull registry.gitlab.com/salokyn/docker-s3ql:latest
 docker run -ti -e S3QL_USERNAME=myLogin \
