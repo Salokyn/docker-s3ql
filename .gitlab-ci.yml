@@ -10,6 +10,7 @@ variables:
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
 
 shellcheck:
   image: koalaman/shellcheck-alpine
@@ -19,9 +20,9 @@ shellcheck:
 
 build:
   stage: build
-  image: docker:latest
+  image: docker:19.03.5
   services:
-    - docker:dind
+    - docker:19.03.5-dind
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
   script:
@@ -34,9 +35,9 @@ build:
 
 test:
   stage: test
-  image: docker:latest
+  image: docker:19.03.5
   services:
-    - docker:dind
+    - docker:19.03.5-dind
   variables:
     RUN_ENV: -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL
     RUN_MOUNT_ARGS: $RUN_ENV --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined
@@ -77,9 +78,9 @@ test:
 
 publish:
   stage: publish
-  image: docker:latest
+  image: docker:19.03.5
   services:
-    - docker:dind
+    - docker:19.03.5-dind
   before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker login -u salokyn -p $DOCKER_PASSWORD
