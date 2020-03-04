@@ -5,6 +5,11 @@ error() {
   exit 1
 }
 
+echo "--DEBUG--"
+echo "$S3QL_AUTHFILE"
+head -n1 "$S3QL_AUTHFILE"
+echo "--DEBUG--"
+
 # Create Authfile
 if [ ! -f "$S3QL_AUTHFILE" ]
 then
