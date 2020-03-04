@@ -23,8 +23,6 @@ then
   mkdir -p "$MOUNTPOINT" || error
 fi
 
-
-
 # Mount FS
 if [ -f "$S3QL_AUTHFILE" ]
 then
@@ -35,8 +33,6 @@ then
     S3QL_URL=$(sed -n 's/storage-url *: *\(.*\)/\1/p' "$S3QL_AUTHFILE"|head -n1)
   fi
 
-  # shellcheck disable=SC2086
-  echo fsck.s3ql $S3QL_FSCK_OPTIONS --authfile "$S3QL_AUTHFILE" --batch "$S3QL_URL" && FSCK_RESULT=$?
   # shellcheck disable=SC2086
   fsck.s3ql $S3QL_FSCK_OPTIONS --authfile "$S3QL_AUTHFILE" --batch "$S3QL_URL" && FSCK_RESULT=$?
   if [ $FSCK_RESULT -ne 0 ] && [ $FSCK_RESULT -ne 128 ]; then
@@ -51,6 +47,6 @@ then
 
   wait $PID
 else
-  echo "Authfile not found"  >&2
+  echo "Authfile not found" >&2
   error
 fi
