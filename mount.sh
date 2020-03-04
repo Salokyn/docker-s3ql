@@ -1,7 +1,5 @@
 #!/bin/sh
 
-S3QL_HOME=/root/.s3ql
-AUTHFILE="$S3QL_HOME/authinfo2"
 PID=0
 
 term() {
@@ -26,10 +24,10 @@ then
 fi
 
 # Mount FS
-if [ -f "$AUTHFILE" ]
+if [ -f "$S3QL_AUTHFILE" ]
 then
   # shellcheck disable=SC2086
-  fsck.s3ql $S3QL_FSCK_OPTIONS --batch "$S3QL_URL" && FSCK_RESULT=$?
+  fsck.s3ql $S3QL_FSCK_OPTIONS --authfile "$S3QL_AUTHFILE" --batch "$S3QL_URL" && FSCK_RESULT=$?
   if [ $FSCK_RESULT -ne 0 ] && [ $FSCK_RESULT -ne 128 ]; then
     echo "fsck.s3ql reported errors! Exit code $FSCK_RESULT - see http://www.rath.org/s3ql-docs/man/fsck.html"
     error
@@ -38,7 +36,7 @@ then
   trap 'term' TERM INT HUP
 
   # shellcheck disable=SC2086
-  mount.s3ql $S3QL_MOUNT_OPTIONS --fg "$S3QL_URL" "$MOUNTPOINT" & PID=$!
+  mount.s3ql $S3QL_MOUNT_OPTIONS --authfile "$S3QL_AUTHFILE" --fg "$S3QL_URL" "$MOUNTPOINT" & PID=$!
 
   wait $PID
 else
