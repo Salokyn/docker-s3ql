@@ -32,7 +32,7 @@ then
   # Set S3QL_URL if empty with first storage-url of authfile
   if [ -z "$S3QL_URL" ]
   then
-    S3QL_URL=$(grep storage-url "$S3QL_AUTHFILE"|head -n1|cut -d: -f2-)
+    S3QL_URL=$(sed -n 's/storage-url *: *\(.*\)/\1/p' "$S3QL_AUTHFILE"|head -n1)
   fi
 
   # shellcheck disable=SC2086
