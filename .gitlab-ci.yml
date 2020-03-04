@@ -8,8 +8,6 @@ variables:
   S3QL_VERSION: "3.3.2"
   BUILD_TAG: $CI_REGISTRY_IMAGE/s3ql-build:$S3QL_VERSION
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  DOCKER_HOST: tcp://docker:2375
-  DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: "/certs"
 
 shellcheck:
