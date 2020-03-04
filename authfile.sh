@@ -5,10 +5,6 @@ error() {
   exit 1
 }
 
-echo "--DEBUG1--"
-md5sum "$S3QL_AUTHFILE"
-echo "--DEBUG1--"
-
 # Create Authfile
 if [ ! -f "$S3QL_AUTHFILE" ]
 then
@@ -43,5 +39,5 @@ then
 fi
 
 echo "--DEBUG2--"
-md5sum "$S3QL_AUTHFILE"
+head -n1 "$S3QL_AUTHFILE"
 echo "--DEBUG2--"
