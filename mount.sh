@@ -28,6 +28,7 @@ if [ -f "$S3QL_AUTHFILE" ]
 then
   # shellcheck disable=SC2086
   echo fsck.s3ql $S3QL_FSCK_OPTIONS --authfile "$S3QL_AUTHFILE" --batch "$S3QL_URL" && FSCK_RESULT=$?
+  # shellcheck disable=SC2086
   fsck.s3ql $S3QL_FSCK_OPTIONS --authfile "$S3QL_AUTHFILE" --batch "$S3QL_URL" && FSCK_RESULT=$?
   if [ $FSCK_RESULT -ne 0 ] && [ $FSCK_RESULT -ne 128 ]; then
     echo "fsck.s3ql reported errors! Exit code $FSCK_RESULT - see http://www.rath.org/s3ql-docs/man/fsck.html"
