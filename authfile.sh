@@ -1,7 +1,4 @@
-#!/bin/sh
-
-S3QL_HOME=/root/.s3ql
-AUTHFILE="$S3QL_HOME/authinfo2"
+#!/bin/sh -e
 
 error() {
   echo "An error occured. Exiting $0." >&2
@@ -9,9 +6,9 @@ error() {
 }
 
 # Create Authfile
-if [ ! -f "$AUTHFILE" ]
+if [ ! -f "$S3QL_AUTHFILE" ]
 then
-  echo "Creating $AUTHFILE..." >&2
+  echo "Creating $S3QL_AUTHFILE..." >&2
   
   if [ -z "$S3QL_USERNAME" ] || [ -z "$S3QL_PASSWORD" ] || [ -z "$S3QL_URL" ]
   then
@@ -31,12 +28,15 @@ then
     echo "backend-login: $S3QL_LOGIN";
     echo "backend-password: $S3QL_PASSWORD";
     echo "storage-url: $S3QL_URL"
-  } > "$AUTHFILE"
+  } > "$S3QL_AUTHFILE"
 
   if [ -n "$FS_PASSPHRASE" ]
   then
-    echo "fs-passphrase: $FS_PASSPHRASE" >> "$AUTHFILE"
+    echo "fs-passphrase: $FS_PASSPHRASE" >> "$S3QL_AUTHFILE"
   fi
+fi
 
-  chmod 600 "$AUTHFILE"
+if [ -w "$S3QL_AUTHFILE" ]
+then
+  chmod 600 "$S3QL_AUTHFILE"
 fi
