@@ -6,8 +6,7 @@ error() {
 }
 
 echo "--DEBUG1--"
-echo "$S3QL_AUTHFILE"
-head -n1 "$S3QL_AUTHFILE"
+md5sum "$S3QL_AUTHFILE"
 echo "--DEBUG1--"
 
 # Create Authfile
@@ -44,6 +43,5 @@ then
 fi
 
 echo "--DEBUG2--"
-echo "$S3QL_AUTHFILE"
-head -n1 "$S3QL_AUTHFILE"
+md5sum "$S3QL_AUTHFILE"
 echo "--DEBUG2--"
