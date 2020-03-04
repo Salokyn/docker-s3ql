@@ -1,4 +1,4 @@
-#!/bin/sh -x
+#!/bin/sh
 
 PID=0
 
@@ -23,9 +23,18 @@ then
   mkdir -p "$MOUNTPOINT" || error
 fi
 
+
+
 # Mount FS
 if [ -f "$S3QL_AUTHFILE" ]
 then
+
+  # Set S3QL_URL if empty with first storage-url of authfile
+  if [ -z "$S3QL_URL" ]
+  then
+    S3QL_URL=$(grep storage-url "$S3QL_AUTHFILE"|head -n1|cut -d: -f2-)
+  fi
+
   # shellcheck disable=SC2086
   echo fsck.s3ql $S3QL_FSCK_OPTIONS --authfile "$S3QL_AUTHFILE" --batch "$S3QL_URL" && FSCK_RESULT=$?
   # shellcheck disable=SC2086
