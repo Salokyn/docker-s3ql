@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 error() {
   echo "An error occured. Exiting $0." >&2
@@ -34,10 +34,9 @@ then
   then
     echo "fs-passphrase: $FS_PASSPHRASE" >> "$S3QL_AUTHFILE"
   fi
-
-  chmod 600 "$S3QL_AUTHFILE"
 fi
 
-echo "--DEBUG2--"
-head -n1 "$S3QL_AUTHFILE"
-echo "--DEBUG2--"
+if [ -w "$S3QL_AUTHFILE" ]
+then
+  chmod 600 "$S3QL_AUTHFILE"
+fi
