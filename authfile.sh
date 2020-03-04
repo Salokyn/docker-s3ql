@@ -1,14 +1,14 @@
-#!/bin/sh -e
+#!/bin/sh
 
 error() {
   echo "An error occured. Exiting $0." >&2
   exit 1
 }
 
-echo "--DEBUG--"
+echo "--DEBUG1--"
 echo "$S3QL_AUTHFILE"
 head -n1 "$S3QL_AUTHFILE"
-echo "--DEBUG--"
+echo "--DEBUG1--"
 
 # Create Authfile
 if [ ! -f "$S3QL_AUTHFILE" ]
@@ -42,3 +42,8 @@ then
 
   chmod 600 "$S3QL_AUTHFILE"
 fi
+
+echo "--DEBUG2--"
+echo "$S3QL_AUTHFILE"
+head -n1 "$S3QL_AUTHFILE"
+echo "--DEBUG2--"
