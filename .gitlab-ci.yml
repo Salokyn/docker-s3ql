@@ -40,6 +40,8 @@ test:
     TEST_FILE: test.bin
     TEST_PATH: /s3ql/$TEST_FILE
   script:
+    - echo "$S3QL_AUTHFILE"
+    - head -n1 "$S3QL_AUTHFILE"
     - docker pull $IMAGE_TAG
     # Create clean file system
     - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
