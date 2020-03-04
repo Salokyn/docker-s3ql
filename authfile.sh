@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 error() {
   echo "An error occured. Exiting $0." >&2

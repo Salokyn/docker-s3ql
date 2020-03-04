@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 S3QL_HOME=/root/.s3ql
 
