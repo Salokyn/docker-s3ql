@@ -34,6 +34,9 @@ then
   then
     echo "fs-passphrase: $FS_PASSPHRASE" >> "$S3QL_AUTHFILE"
   fi
+fi
 
+if [ -w "$S3QL_AUTHFILE" ]
+then
   chmod 600 "$S3QL_AUTHFILE"
 fi
