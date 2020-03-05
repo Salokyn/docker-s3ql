@@ -34,6 +34,11 @@ then
   then
     echo "fs-passphrase: $FS_PASSPHRASE" >> "$S3QL_AUTHFILE"
   fi
+
+  if [ -n "$BACKEND_OPTIONS" ]
+  then
+    echo "backend-options: $BACKEND_OPTIONS" >> "$S3QL_AUTHFILE"
+  fi
 fi
 
 if [ -w "$S3QL_AUTHFILE" ]
