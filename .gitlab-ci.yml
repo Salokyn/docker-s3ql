@@ -42,10 +42,10 @@ test:
   script:
     - docker pull $IMAGE_TAG
     # Create clean file system
-    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
+    - docker run -e BACKEND_OPTIONS='domain=default' -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e S3QL_URL $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
     - docker run -e S3QL_AUTHFILE -v $S3QL_AUTHFILE:$S3QL_AUTHFILE $IMAGE_TAG mkfs.s3ql --plain --authfile $S3QL_AUTHFILE $S3QL_URL
     # Mount file system for the first time
-    - docker run -d --name firstmount -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined $IMAGE_TAG
+    - docker run -d --name firstmount -e BACKEND_OPTIONS='domain=default' -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e S3QL_URL --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined $IMAGE_TAG
     - sleep 20
     - docker logs firstmount
     - test $(docker inspect -f {{.State.Running}} firstmount) = true
@@ -58,7 +58,7 @@ test:
     # Stop container and verify that file is not available anymore after unmounting
     - docker stop firstmount
     - docker logs firstmount
-    - docker run -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e FS_PASSPHRASE -e S3QL_URL $IMAGE_TAG sh -c "test ! -e $TEST_PATH"
+    - docker run -e BACKEND_OPTIONS='domain=default' -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e S3QL_URL $IMAGE_TAG sh -c "test ! -e $TEST_PATH"
     # Mount file system for the second time
     - docker run -d --name secondmount -e S3QL_AUTHFILE -v $S3QL_AUTHFILE:$S3QL_AUTHFILE --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined $IMAGE_TAG
     - sleep 20
