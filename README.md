@@ -39,7 +39,6 @@ docker build -t docker-s3ql --build-arg S3QL_VERSION=3.3.2 .
 - `S3QL_USERNAME` and `S3QL_PASSWORD`: Cloud service credentials.
 - `S3QL_PROJECT`: Cloud project or tenant (OpenStack/Swift Backends only).
 - `S3QL_URL`: Depends on the backend. See [S3QL backends documentation](http://www.rath.org/s3ql-docs/backends.html).
-- `S3QL_DOMAIN`: (optional) If this option is specified, S3QL will use the Keystone v3 API. The default domain for OpenStack installations is Default. See [S3QL backends documentation](http://www.rath.org/s3ql-docs/backends.html#cmdoption-swift-backend-arg-domain).
 - `FS_PASSPHRASE`: S3QL FS may be encrypted. This is the passphrase to unlock the AES 256 encryption key.
 - `S3QL_MOUNT_OPTIONS`: Options be added to the `mount.s3ql` command in addition to `--fg`. See [`mount.s3ql` documentation](http://www.rath.org/s3ql-docs/man/mount.html).
 - `S3QL_FSCK_OPTIONS`: Options to be added to the `fsck.s3ql` command in addition to `--batch`. See [`fsck.s3ql` documentation](http://www.rath.org/s3ql-docs/man/fsck.html) .

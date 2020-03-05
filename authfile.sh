@@ -30,11 +30,6 @@ then
     echo "storage-url: $S3QL_URL"
   } > "$S3QL_AUTHFILE"
 
-  if [ -n "$S3QL_DOMAIN" ]
-  then
-    echo "domain: $S3QL_DOMAIN" >> "$S3QL_AUTHFILE"
-  fi
-
   if [ -n "$FS_PASSPHRASE" ]
   then
     echo "fs-passphrase: $FS_PASSPHRASE" >> "$S3QL_AUTHFILE"
