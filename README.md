@@ -98,6 +98,8 @@ services:
 Take care to use [bind-propagation](https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation) to share S3QL mount with the host or another container.
 You should specify a *stop-timout* greater than default 10s since unmounting S3QL may be long.
 
+Do not make a bind mount of an authfile in ~/root/.s3ql since this folder is already stored in a volume. If needed, mount the authfile elsewhere and use `S3QL_AUTHFILE` to specify its path.
+
 ### Create a S3QL FS
 ```shell
 docker pull registry.gitlab.com/salokyn/docker-s3ql:latest
