@@ -87,14 +87,14 @@ publish:
     - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:$S3QL_VERSION
     - docker tag $IMAGE_TAG salokyn/docker-s3ql:latest
     - docker tag $IMAGE_TAG salokyn/docker-s3ql:$S3QL_VERSION
-    - docker tag $IMAGE_TAG docker.pkg.github.com/salokyn/docker-s3ql:latest
-    - docker tag $IMAGE_TAG docker.pkg.github.com/salokyn/docker-s3ql:$S3QL_VERSION
+    - docker tag $IMAGE_TAG docker.pkg.github.com/salokyn/docker-s3ql/docker-s3ql:latest
+    - docker tag $IMAGE_TAG docker.pkg.github.com/salokyn/docker-s3ql/docker-s3ql:$S3QL_VERSION
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:$S3QL_VERSION
     - docker push salokyn/docker-s3ql:latest
     - docker push salokyn/docker-s3ql:$S3QL_VERSION
-    - docker push docker.pkg.github.com/salokyn/docker-s3ql:latest
-    - docker push docker.pkg.github.com/salokyn/docker-s3ql:$S3QL_VERSION
+    - docker push docker.pkg.github.com/salokyn/docker-s3ql/docker-s3ql:latest
+    - docker push docker.pkg.github.com/salokyn/docker-s3ql/docker-s3ql:$S3QL_VERSION
   only:
     - master
   
