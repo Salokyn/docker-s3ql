@@ -29,7 +29,7 @@ apt-get install fuse
 S3QL version must be privided in variable `S3QL_VERSION` for the image to be build.
 
 ```shell
-docker build -t docker-s3ql --build-arg S3QL_VERSION=3.3.2 .
+docker build -t docker-s3ql --build-arg S3QL_VERSION=3.4.0 .
 ```
 
 ## Usage
@@ -109,4 +109,12 @@ docker run -ti -e S3QL_USERNAME=myLogin \
                -e S3QL_URL=swiftks://openstack.backend/REGION:CONTAINER \
                registry.gitlab.com/salokyn/docker-s3ql:latest \
                mkfs.s3ql swiftks://openstack.backend/REGION:CONTAINER
+```
+
+### Upgrade a S3QL FS
+```shell
+docker run --rm -ti -e S3QL_AUTHFILE=/authinfo2 \
+               -v ./authinfo2:/authinfo2
+               registry.gitlab.com/salokyn/docker-s3ql:latest \
+               sh -c 's3qladm upgrade --authfile $S3QL_AUTHFILE swiftks://openstack.backend/REGION:CONTAINER'
 ```
