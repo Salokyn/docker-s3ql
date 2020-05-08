@@ -29,7 +29,7 @@ apt-get install fuse
 S3QL version must be privided in variable `S3QL_VERSION` for the image to be build.
 
 ```shell
-docker build -t docker-s3ql --build-arg S3QL_VERSION=3.4.0 .
+docker build -t docker-s3ql --build-arg S3QL_VERSION=3.4.1 .
 ```
 
 ## Usage
