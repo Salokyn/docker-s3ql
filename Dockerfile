@@ -2,7 +2,7 @@ FROM python:3.8-alpine AS build
 
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse3-dev sqlite-dev libffi-dev openssl-dev
 RUN pip install --user --ignore-installed \
-    "setuptools == 46.1.3" \
+    "setuptools < 49.0" \
     cryptography \
     defusedxml \
     requests \
