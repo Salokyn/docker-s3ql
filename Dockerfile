@@ -6,7 +6,6 @@ RUN pip install --user --ignore-installed \
     "certifi == 2020.4.5.1" \
     "idna == 2.9" \
     "setuptools == 46.1.3" \
-    "six == 1.14.0" \
     "sortedcontainers == 2.1.0" \
     "urllib3 == 1.25.9" \
     defusedxml \
