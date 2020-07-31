@@ -2,7 +2,16 @@ FROM python:3.8-alpine AS build
 
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse3-dev sqlite-dev libffi-dev openssl-dev
 RUN pip install --user --ignore-installed \
-    cryptography defusedxml requests "apsw >= 3.7.0" "trio >= 0.9" "pyfuse3 >= 1.0, < 2.0" "dugong >= 3.4, < 4.0" google-auth google-auth-oauthlib
+    "setuptools < 47.0" \
+    cryptography \
+    defusedxml \
+    requests \
+    "apsw >= 3.7.0" \
+    "trio >= 0.9" \
+    "pyfuse3 >= 1.0, < 2.0" \
+    "dugong >= 3.4, < 4.0" \
+    google-auth \
+    google-auth-oauthlib
 RUN gpg2 --batch --keyserver keyserver.ubuntu.com --recv-key 0xD113FCAC3C4E599F
 ARG S3QL_VERSION
 ARG FILE="s3ql-$S3QL_VERSION"
