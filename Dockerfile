@@ -3,6 +3,7 @@ FROM python:3.8.2-alpine3.11 AS build
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse3-dev sqlite-dev libffi-dev openssl-dev
 RUN pip install --user --ignore-installed \
     "setuptools == 46.1.3" \
+    "cryptography == 2.9.2" \
     defusedxml \
     requests \
     "apsw >= 3.7.0" \
