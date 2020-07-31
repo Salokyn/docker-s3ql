@@ -2,15 +2,14 @@ FROM python:3.8.2-alpine3.11 AS build
 
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse3-dev sqlite-dev libffi-dev openssl-dev
 RUN pip install --user --ignore-installed \
-    "cryptography == 2.9.2" \
-    "certifi == 2020.4.5.1" \
+    "setuptools == 46.1.3" \
     defusedxml \
-    "requests == 2.23.0" \
+    requests \
     "apsw >= 3.7.0" \
-    "trio == 0.14.0" \
+    "trio >= 0.9" \
     "pyfuse3 >= 1.0, < 2.0" \
     "dugong >= 3.4, < 4.0" \
-    "google-auth == 1.14.2"\
+    google-auth \
     google-auth-oauthlib
 RUN gpg2 --batch --keyserver keyserver.ubuntu.com --recv-key 0xD113FCAC3C4E599F
 ARG S3QL_VERSION
