@@ -7,8 +7,8 @@ RUN pip install --user --ignore-installed \
     defusedxml \
     requests \
     "apsw >= 3.7.0" \
-    "trio >= 0.9" \
-    "pyfuse3 >= 1.0, < 2.0" \
+    "trio >= 0.15" \
+    "pyfuse3 >= 3.0, < 4.0" \
     "dugong >= 3.4, < 4.0" \
     google-auth \
     google-auth-oauthlib
