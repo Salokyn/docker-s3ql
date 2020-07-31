@@ -5,7 +5,6 @@ RUN pip install --user --ignore-installed \
     "cryptography == 2.9.2" \
     "certifi == 2020.4.5.1" \
     "setuptools == 46.1.3" \
-    "urllib3 == 1.25.9" \
     defusedxml \
     "requests == 2.23.0" \
     "apsw >= 3.7.0" \
