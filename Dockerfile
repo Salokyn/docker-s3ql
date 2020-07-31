@@ -4,6 +4,11 @@ RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse3-dev sqlite-d
 RUN pip install --user --ignore-installed \
     "cryptography == 2.9.2" \
     "certifi == 2020.4.5.1" \
+    "idna == 2.9" \
+    "setuptools == 46.1.3" \
+    "six == 1.14.0" \
+    "sortedcontainers == 2.1.0" \
+    "urllib3 == 1.25.9" \
     defusedxml \
     "requests == 2.23.0" \
     "apsw >= 3.7.0" \
