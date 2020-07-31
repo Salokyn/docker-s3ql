@@ -1,4 +1,4 @@
-FROM python:3.8.2-alpine3.11 AS build
+FROM python:3-alpine AS build
 
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse3-dev sqlite-dev libffi-dev openssl-dev
 RUN pip install --user --ignore-installed \
@@ -24,7 +24,7 @@ WORKDIR $FILE
 RUN python3 setup.py build_ext --inplace \
  && python3 setup.py install --user
 
-FROM python:3.8.2-alpine3.11
+FROM python:3-alpine
 RUN apk --no-cache add fuse3 psmisc
 COPY --from=build /root/.local/bin/ /usr/local/bin/
 COPY --from=build /root/.local/lib/ /usr/local/lib/
