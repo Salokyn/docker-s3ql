@@ -1,46 +1,47 @@
-stages:
-  - shellcheck
-  - build
-  - test
-  - publish
-
-variables:
-  S3QL_VERSION: "3.5.0"
-  BUILD_TAG: $CI_REGISTRY_IMAGE/s3ql-build:$S3QL_VERSION
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-  DOCKER_TLS_CERTDIR: "/certs"
-
 shellcheck:
   image: koalaman/shellcheck-alpine
-  stage: shellcheck
+  stage: .pre
   script:
     - "find . -name '*.sh' -type f -print0 | LC_ALL=C.UTF-8 xargs -n 1 -t -0 shellcheck"
 
-build:
+docker-build-master:
+  # Official docker image.
+  image: docker:latest
   stage: build
-  image: docker:19.03.5
   services:
-    - docker:19.03.5-dind
+    - docker:dind
   before_script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
   script:
-    - docker pull $BUILD_TAG || true
-    - docker build --cache-from $BUILD_TAG --pull --target build -t $BUILD_TAG --build-arg S3QL_VERSION .
-    - docker push $BUILD_TAG
-    - docker pull $IMAGE_TAG || true
-    - docker build --cache-from $BUILD_TAG --cache-from $IMAGE_TAG --pull -t $IMAGE_TAG --build-arg S3QL_VERSION .
-    - docker push $IMAGE_TAG
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"
+  only:
+    - master
+
+docker-build:
+  # Official docker image.
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --pull -t "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG" .
+    - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  except:
+    - master
 
 test:
   stage: test
-  image: docker:19.03.5
+  image: docker
   services:
-    - docker:19.03.5-dind
+    - docker:dind
   variables:
     TEST_FILE: test.bin
     TEST_PATH: /s3ql/$TEST_FILE
+    IMAGE_TAG: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   script:
-    - docker pull $IMAGE_TAG
     # Create clean file system
     - docker run -e BACKEND_OPTIONS='domain=default' -e S3QL_USERNAME -e S3QL_PASSWORD -e S3QL_PROJECT -e S3QL_URL $IMAGE_TAG sh -c "echo yes|s3qladm clear $S3QL_URL"
     - docker run -e S3QL_AUTHFILE -v $S3QL_AUTHFILE:$S3QL_AUTHFILE $IMAGE_TAG mkfs.s3ql --plain --authfile $S3QL_AUTHFILE $S3QL_URL
@@ -70,31 +71,3 @@ test:
     # Stop container again
     - docker stop secondmount
     - docker logs secondmount
-
-
-publish:
-  stage: publish
-  image: docker:19.03.5
-  services:
-    - docker:19.03.5-dind
-  before_script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker login -u salokyn -p $DOCKER_PASSWORD
-    - docker login -u salokyn -p $GITHUB_PASSWORD docker.pkg.github.com
-  script:
-    - docker pull $IMAGE_TAG
-    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:latest
-    - docker tag $IMAGE_TAG $CI_REGISTRY_IMAGE:$S3QL_VERSION
-    - docker tag $IMAGE_TAG salokyn/docker-s3ql:latest
-    - docker tag $IMAGE_TAG salokyn/docker-s3ql:$S3QL_VERSION
-    - docker tag $IMAGE_TAG docker.pkg.github.com/salokyn/docker-s3ql/docker-s3ql:latest
-    - docker tag $IMAGE_TAG docker.pkg.github.com/salokyn/docker-s3ql/docker-s3ql:$S3QL_VERSION
-    - docker push $CI_REGISTRY_IMAGE:latest
-    - docker push $CI_REGISTRY_IMAGE:$S3QL_VERSION
-    - docker push salokyn/docker-s3ql:latest
-    - docker push salokyn/docker-s3ql:$S3QL_VERSION
-    - docker push docker.pkg.github.com/salokyn/docker-s3ql/docker-s3ql:latest
-    - docker push docker.pkg.github.com/salokyn/docker-s3ql/docker-s3ql:$S3QL_VERSION
-  only:
-    - master
-  

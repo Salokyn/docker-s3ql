@@ -13,7 +13,7 @@ RUN pip install --user --ignore-installed \
     google-auth \
     google-auth-oauthlib
 RUN gpg2 --batch --keyserver keyserver.ubuntu.com --recv-key 0xD113FCAC3C4E599F
-ARG S3QL_VERSION
+ARG S3QL_VERSION=3.5.0
 ARG FILE="s3ql-$S3QL_VERSION"
 ARG URL="https://github.com/s3ql/s3ql/releases/download/release-$S3QL_VERSION/$FILE.tar.bz2"
 RUN set -x; \
