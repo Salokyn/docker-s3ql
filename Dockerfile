@@ -1,10 +1,11 @@
 FROM python:3.8-alpine AS build
 
+ARG S3QL_VERSION=3.5.1
+
 COPY requirements.txt /
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse3-dev sqlite-dev libffi-dev openssl-dev
 RUN pip install --user --ignore-installed -r requirements.txt
 RUN gpg2 --batch --keyserver keyserver.ubuntu.com --recv-key 0xD113FCAC3C4E599F
-ARG S3QL_VERSION=3.5.0
 ARG FILE="s3ql-$S3QL_VERSION"
 ARG URL="https://github.com/s3ql/s3ql/releases/download/release-$S3QL_VERSION/$FILE.tar.bz2"
 RUN set -x; \
