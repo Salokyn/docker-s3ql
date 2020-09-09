@@ -8,7 +8,7 @@ safety:
   image: python:3.8-alpine
   stage: .pre
   script: 
-    - apk --no-cache add g++ make pkgconfig libffi-dev
+    - apk --no-cache add g++ make pkgconfig fuse3-dev libffi-dev
     - pip install --user --ignore-installed -r requirements.txt
     - pip install safety
     - safety check -r requirements.txt --full-report
