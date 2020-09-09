@@ -5,10 +5,12 @@ shellcheck:
     - "find . -name '*.sh' -type f -print0 | LC_ALL=C.UTF-8 xargs -n 1 -t -0 shellcheck"
 
 safety:
-  image: pyupio/safety
+  image: python:3.8-alpine
   stage: .pre
   script: 
-    - safety check -r requirements.txt
+    - pip install --user --ignore-installed -r requirements.txt
+    - pip install safety
+    - safety check -r requirements.txt --full-report
   allow_failure: true
 
 docker-build-master:
