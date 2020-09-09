@@ -8,7 +8,7 @@ safety:
   image: pyupio/safety
   stage: .pre
   script: 
-    - safety check -f requirements.txt
+    - safety check -r requirements.txt
   allow_failure: true
 
 docker-build-master:
