@@ -35,6 +35,7 @@ docker-build:
 safety:
   image: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   stage: test
+  entrypoint: ["/bin/sh"]
   script:
     - pip install safety
     - safety check
