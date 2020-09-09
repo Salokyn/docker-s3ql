@@ -4,16 +4,6 @@ shellcheck:
   script:
     - "find . -name '*.sh' -type f -print0 | LC_ALL=C.UTF-8 xargs -n 1 -t -0 shellcheck"
 
-safety:
-  image: python:3.8-alpine
-  stage: .pre
-  script: 
-    - apk --no-cache add g++ make pkgconfig fuse3-dev libffi-dev openssl-dev
-    - pip install --user --ignore-installed -r requirements.txt
-    - pip install safety
-    - safety check
-  allow_failure: true
-
 docker-build-master:
   # Official docker image.
   image: docker:latest
@@ -41,6 +31,14 @@ docker-build:
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
   except:
     - master
+
+safety:
+  image: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+  stage: test
+  script:
+    - pip install safety
+    - safety check
+  allow_failure: true
 
 test:
   stage: test
