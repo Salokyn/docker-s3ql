@@ -11,7 +11,7 @@ safety:
     - apk --no-cache add g++ make pkgconfig fuse3-dev libffi-dev openssl-dev
     - pip install --user --ignore-installed -r requirements.txt
     - pip install safety
-    - safety check --full-report
+    - safety check
   allow_failure: true
 
 docker-build-master:
