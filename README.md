@@ -113,7 +113,7 @@ docker run -ti -e S3QL_USERNAME=myLogin \
 ### Upgrade a S3QL FS
 ```shell
 docker run --rm -ti -e S3QL_AUTHFILE=/authinfo2 \
-               -v ./authinfo2:/authinfo2
+               -v $(pwd)/authinfo2:/authinfo2 \
                registry.gitlab.com/salokyn/docker-s3ql:latest \
-               sh -c 's3qladm upgrade --authfile $S3QL_AUTHFILE swiftks://openstack.backend/REGION:CONTAINER'
+               sh -c 's3qladm --authfile $S3QL_AUTHFILE upgrade swiftks://openstack.backend/REGION:CONTAINER'
 ```
