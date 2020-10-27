@@ -32,6 +32,16 @@ docker-build:
   except:
     - master
 
+safety:
+  image: 
+    name: "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
+    entrypoint: [""]
+  stage: test
+  script:
+    - pip install safety
+    - safety check
+  allow_failure: true
+
 test:
   stage: test
   image: docker
