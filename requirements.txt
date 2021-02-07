@@ -1,4 +1,4 @@
-setuptools < 48.0
+setuptools
 cryptography
 defusedxml
 requests
