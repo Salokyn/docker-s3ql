@@ -1,5 +1,5 @@
 setuptools < 47.0
-cryptography
+cryptography < 3.4
 defusedxml
 requests
 apsw >= 3.7.0
