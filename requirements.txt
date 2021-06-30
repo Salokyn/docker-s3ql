@@ -1,10 +1,10 @@
 setuptools
+apsw >= 3.7.0
 cryptography
 requests
 defusedxml
 dugong >= 3.4, < 4.0
 google-auth
 google-auth-oauthlib
-apsw >= 3.7.0
 trio >= 0.15
 pyfuse3 >= 3.2.0, < 4.0
