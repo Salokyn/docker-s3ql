@@ -11,7 +11,8 @@ ARG URL="https://github.com/s3ql/s3ql/releases/download/release-$S3QL_VERSION/$F
 RUN set -x; \
     curl -sfL "$URL" -o "/tmp/$FILE.tar.gz" \
  && curl -sfL "$URL.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.gz" \
- && tar -xf "/tmp/$FILE.tar.gz"
+ && tar -xf "/tmp/$FILE.tar.gz" \
+ && find . -type f -exec touch {} +;
 WORKDIR $FILE
 RUN python3 setup.py build_ext --inplace \
  && python3 setup.py install --user
