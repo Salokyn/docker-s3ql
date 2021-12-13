@@ -7,11 +7,11 @@ RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse3-dev sqlite-d
 RUN pip install --user --ignore-installed -r requirements.txt
 RUN gpg2 --batch --keyserver keyserver.ubuntu.com --recv-key 0xD113FCAC3C4E599F
 ARG FILE="s3ql-$S3QL_VERSION"
-ARG URL="https://github.com/s3ql/s3ql/releases/download/release-$S3QL_VERSION/$FILE.tar.bz2"
+ARG URL="https://github.com/s3ql/s3ql/releases/download/release-$S3QL_VERSION/$FILE.tar.gz"
 RUN set -x; \
-    curl -sfL "$URL" -o "/tmp/$FILE.tar.bz2" \
- && curl -sfL "$URL.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.bz2" \
- && tar -xjf "/tmp/$FILE.tar.bz2"
+    curl -sfL "$URL" -o "/tmp/$FILE.tar.gz" \
+ && curl -sfL "$URL.asc" | gpg2 --batch --verify - "/tmp/$FILE.tar.gz" \
+ && tar -xf "/tmp/$FILE.tar.gz"
 WORKDIR $FILE
 RUN python3 setup.py build_ext --inplace \
  && python3 setup.py install --user
