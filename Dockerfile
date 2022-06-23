@@ -1,6 +1,6 @@
 FROM python:3.8-alpine AS build
 
-ARG S3QL_VERSION=3.8.0
+ARG S3QL_VERSION=4.0.0
 
 COPY requirements.txt /
 RUN apk --no-cache add curl gnupg jq bzip2 g++ make pkgconfig fuse3-dev sqlite-dev libffi-dev openssl-dev cargo
